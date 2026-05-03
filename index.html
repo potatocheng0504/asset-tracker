@@ -77,6 +77,25 @@
       margin-left: 6px;
     }
 
+    .btn-clear-all {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--text2);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .btn-clear-all:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: rgba(239,68,68,0.05);
+    }
+
     /* ── Nav Tabs ── */
     nav {
       background: var(--surface);
@@ -1631,6 +1650,12 @@
   </div>
   <div class="header-right">
     <div class="total-badge">總資產<span id="header-total">—</span></div>
+    <button class="btn-clear-all" id="btn-clear-all">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+      </svg>
+      清空資料
+    </button>
   </div>
 </header>
 
@@ -3869,6 +3894,27 @@ function renderForecast() {
     }
   }
 }
+
+// ── Clear All ─────────────────────────────────────────────
+
+document.getElementById('btn-clear-all').addEventListener('click', () => {
+  if (!confirm('確定要清空所有資料嗎？\n（資產、收入、開銷紀錄將全部清除）')) return;
+  assets        = [];
+  incomeSources = [];
+  expenses      = [];
+  snapshots     = [];
+  targets       = {};
+  save(KEYS.assets, assets);
+  save(KEYS.snapshots, snapshots);
+  save(KEYS.targets, targets);
+  localStorage.setItem(INCOME_KEY, JSON.stringify(incomeSources));
+  save(EXP_KEY, expenses);
+  renderDashboard();
+  renderAssets();
+  renderExpenses();
+  renderForecast();
+  updateHeader();
+});
 
 // ── Init ──────────────────────────────────────────────────
 
