@@ -2307,6 +2307,41 @@ const KEYS = { assets: 'assets', snapshots: 'snapshots', targets: 'pa_targets' }
 
 localStorage.clear();
 
+// ── 預設示範資料（小資族月收入 35,000）──────────────────────
+(function seedDefaults() {
+  const today = new Date();
+  const ym = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+
+  const assets = [
+    { id: 1, name: '台新銀行活存', category: '儲蓄帳戶', market: 62000, cost: 62000,
+      note: '緊急備用金（約 2 個月薪資）', date: ym + '-01' },
+    { id: 2, name: '元大台灣50（0050）', category: '台股/ETF', market: 48000, cost: 45000,
+      note: '長期持有', date: ym + '-01',
+      dca: { enabled: true, amountPerTime: 3000, cycle: 'monthly', nextDate: ym.replace('-', '-') + '-05', times: '' } },
+    { id: 3, name: '一年期定存', category: '定存', market: 25000, cost: 25000,
+      note: '年利率 1.6%', date: ym + '-01' },
+    { id: 4, name: '皮夾現金', category: '現金', market: 5000, cost: 5000,
+      note: '', date: ym + '-01' },
+  ];
+
+  const monthlyIncome = [
+    { id: 1, name: '薪資', amount: 35000 },
+  ];
+
+  const expenses = [
+    { id: 101, date: ym + '-01', amount: 8000, category: '帳單', note: '月租金' },
+    { id: 102, date: ym + '-01', amount: 1100, category: '帳單', note: '水電網路費' },
+    { id: 103, date: ym + '-01', amount: 499,  category: '帳單', note: '手機費' },
+    { id: 104, date: ym + '-01', amount: 1200, category: '交通', note: '捷運月票' },
+    { id: 105, date: ym + '-02', amount: 4500, category: '飲食', note: '本月餐費' },
+    { id: 106, date: ym + '-02', amount: 650,  category: '購物', note: '日用品' },
+  ];
+
+  localStorage.setItem('assets',        JSON.stringify(assets));
+  localStorage.setItem('monthlyIncome', JSON.stringify(monthlyIncome));
+  localStorage.setItem('expenses',      JSON.stringify(expenses));
+})();
+
 function load(key) {
   try { return JSON.parse(localStorage.getItem(key)) || []; }
   catch { return []; }
