@@ -2305,6 +2305,8 @@ const CAT_BADGE_BG = {
 
 const KEYS = { assets: 'assets', snapshots: 'snapshots', targets: 'pa_targets' };
 
+localStorage.clear();
+
 function load(key) {
   try { return JSON.parse(localStorage.getItem(key)) || []; }
   catch { return []; }
