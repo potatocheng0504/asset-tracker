@@ -1200,12 +1200,73 @@
     #toast.show { opacity: 1; transform: translate(-50%, 0); }
 
     /* ── 財務自由試算(P4)──────────────────────────────── */
-    .forecast-passive-row {
-      display: grid; grid-template-columns: minmax(0, 380px);
-      gap: 16px;
-      padding: 18px 0 20px;
-      margin-bottom: 4px;
-      border-top: 1px solid var(--line);
+    /* 財務自由目標 · 放大的目標卡(讓學員一眼看懂自己的目標) */
+    .goal-hero {
+      margin: 20px 0 8px;
+      padding: 22px 26px 20px;
+      border-radius: 16px;
+      background:
+        radial-gradient(120% 175% at 90% -55%, rgba(232,201,135,0.17), transparent 60%),
+        var(--gold-soft);
+      box-shadow: inset 0 0 0 1px rgba(232,201,135,0.34), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .goal-hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 700; color: var(--gold);
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .goal-hero-eyebrow::before {
+      content: ""; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold); box-shadow: 0 0 9px rgba(232,201,135,0.7);
+    }
+    .goal-hero-row {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px;
+      margin-top: 16px;
+    }
+    .goal-hero-lead { font-size: clamp(16px, 2vw, 19px); font-weight: 600; color: var(--text); }
+    .goal-input-wrap {
+      display: inline-flex; align-items: baseline; gap: 5px;
+      padding: 8px 18px 9px; border-radius: 14px;
+      background: rgba(8,8,10,0.4);
+      box-shadow: inset 0 0 0 1px rgba(232,201,135,0.45);
+      transition: box-shadow 0.3s var(--ease), background 0.3s var(--ease);
+    }
+    .goal-input-wrap:focus-within {
+      box-shadow: inset 0 0 0 1px rgba(232,201,135,0.85), 0 0 0 4px rgba(232,201,135,0.13);
+      background: rgba(8,8,10,0.5);
+    }
+    .goal-input-wrap .goal-cur { font-family: var(--font-display); font-size: 26px; color: var(--gold); line-height: 1; }
+    /* ID 特異度(1,1,1)壓過全域 input[type=number]{width:100%};大字金色 Anton、透明底 */
+    .goal-input-wrap input#fc-target-exp {
+      width: 6ch; min-width: 3ch;
+      padding: 0; border-radius: 0; background: transparent; box-shadow: none;
+      font-family: var(--font-display); font-size: 42px; line-height: 1;
+      color: var(--gold); letter-spacing: 0.01em; text-align: left;
+      font-variant-numeric: tabular-nums; -moz-appearance: textfield;
+    }
+    .goal-input-wrap input#fc-target-exp:focus { box-shadow: none; background: transparent; }
+    .goal-input-wrap input#fc-target-exp::-webkit-outer-spin-button,
+    .goal-input-wrap input#fc-target-exp::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .goal-unit { font-size: 15px; color: var(--text2); font-weight: 600; }
+    .goal-hero-note {
+      margin-top: 15px; font-size: 13px; line-height: 1.7; color: var(--text);
+    }
+    .goal-hero-note #fc-goal-derived { color: var(--gold); font-weight: 700; white-space: nowrap; }
+    .goal-hero .field-hint { display: block; margin-top: 9px; }
+    /* 淺色主題:改用亮白膠囊 + 淺金,避免深色膠囊疊在羊皮紙底變灰 */
+    :root[data-theme="light"] .goal-hero {
+      background:
+        radial-gradient(120% 175% at 90% -55%, rgba(168,133,62,0.16), transparent 60%),
+        rgba(168,133,62,0.08);
+      box-shadow: inset 0 0 0 1px rgba(138,106,44,0.3), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    :root[data-theme="light"] .goal-input-wrap {
+      background: rgba(255,255,255,0.72);
+      box-shadow: inset 0 0 0 1px rgba(138,106,44,0.42);
+    }
+    :root[data-theme="light"] .goal-input-wrap:focus-within {
+      background: rgba(255,255,255,0.9);
+      box-shadow: inset 0 0 0 1px rgba(138,106,44,0.78), 0 0 0 4px rgba(168,133,62,0.14);
     }
     .field-hint {
       font-size: 10.5px; color: var(--text2); line-height: 1.5;
@@ -1657,12 +1718,18 @@
         </div>
       </div>
 
-      <div class="forecast-passive-row">
-        <div class="field">
-          <label>財務自由目標：月開銷</label>
-          <input type="number" id="fc-target-exp" placeholder="0" min="0" step="1000" />
-          <span class="field-hint" id="fc-target-hint">自動帶入你在「收支」記錄的本月開銷，可手動調整</span>
+      <div class="goal-hero">
+        <span class="goal-hero-eyebrow">我的財務自由目標</span>
+        <div class="goal-hero-row">
+          <span class="goal-hero-lead">每月被動收入 ≥</span>
+          <span class="goal-input-wrap">
+            <span class="goal-cur">$</span>
+            <input type="number" id="fc-target-exp" placeholder="0" min="0" step="1000" />
+            <span class="goal-unit">/月</span>
+          </span>
         </div>
+        <p class="goal-hero-note">被動收入蓋過每月開銷，生活就由資產養活 —— 這就是財務自由。<span id="fc-goal-derived"></span></p>
+        <span class="field-hint" id="fc-target-hint">自動帶入你在「收支」記錄的本月開銷，可手動調整</span>
       </div>
 
       <div id="fc-monthly-hint" style="font-size:11.5px;color:var(--text2);margin-bottom:14px;display:none"></div>
@@ -3629,6 +3696,12 @@ function _updateFireSection() {
   if (fireChartInst) { fireChartInst.destroy(); fireChartInst = null; }
 
   const swr = fireSwr > 0 ? fireSwr / 100 : 0;
+
+  // 目標卡衍生:把月開銷換算成「需要資產」,即使下方 FIRE 區塊為空也顯示
+  const derivedEl = $('fc-goal-derived');
+  if (derivedEl) derivedEl.textContent = (fireTargetExp > 0 && swr > 0)
+    ? `　＝ 換算需要資產約 ${fmt(fireTargetExp * 12 / swr)}` : '';
+
   if (!assets.length || !swr || !(fireTargetExp > 0)) {
     emptyEl.style.display = '';
     bodyEl.style.display  = 'none';
@@ -3823,6 +3896,8 @@ function renderForecast() {
     }
     _updateFireSection();
   };
+  // 離開欄位時若留空,回填目前有效目標,避免放大的目標數字顯示空白
+  tInput.onblur = () => { if (tInput.value === '') tInput.value = fireTargetExp || ''; };
 
   // 自動帶入目標後重算一次財務自由區塊(前段 summary 執行時 target 可能還是 0)
   _updateFireSection();
