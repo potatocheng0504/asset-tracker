@@ -2056,13 +2056,7 @@ const KEYS = { assets: 'assets', snapshots: 'snapshots', targets: 'pa_targets' }
 // ③使用者自己輸入/修改過的資料(seed_untouched 已清除)永不覆蓋
 const SEED_V = '3';
 (function seedDefaults() {
-  const hasData   = localStorage.getItem('assets') !== null;
-  const seedV     = localStorage.getItem('seed_v');
-  const untouched = localStorage.getItem('seed_untouched') === '1';
-  // 不 seed 的唯一情況:已有資料,且(版本相同 或 使用者動過且有版本標記)
-  const shouldSeed = !hasData || (seedV !== SEED_V && (untouched || seedV === null));
-  if (!shouldSeed) return;
-
+  // 公開示範站:每次開啟都重置成月光族預設,不保留上次暫存(僅主題偏好保留)
   const today = new Date();
   const ym = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
   const pmDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
@@ -2106,12 +2100,12 @@ const SEED_V = '3';
   localStorage.setItem('assets',         JSON.stringify(assets));
   localStorage.setItem('monthlyIncome',  JSON.stringify(monthlyIncome));
   localStorage.setItem('expenses',       JSON.stringify(expenses));
-  localStorage.setItem('seed_v',         SEED_V);
-  localStorage.setItem('seed_untouched', '1');
-  // 換新示範時,清掉舊示範殘留的目標配置與試算設定(主題偏好保留)
+  // 每次重置一併清掉所有衍生／使用者狀態,確保全新示範(主題偏好保留)
   localStorage.removeItem('pa_targets');
   localStorage.removeItem('fc_targetExp');
   localStorage.removeItem('fc_passive');
+  localStorage.removeItem('fc_swr');
+  localStorage.removeItem('snapshots');
 })();
 
 function load(key) {
