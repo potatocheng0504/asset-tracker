@@ -3,138 +3,134 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>資產追蹤 — 個人財務終端</title>
-  <meta name="description" content="專業級個人資產管理終端：資產配置、收支追蹤、複利預測與財務自由試算。" />
+  <title>登月學院 — 從月光到登月</title>
+  <meta name="description" content="認識登月學院的起點、使命、價值觀與引路人,並免費使用資產終端:資產配置、收支追蹤、複利與財務自由試算。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="登月學院 — 從月光到登月" />
+  <meta property="og:description" content="六個章節認識登月學院,然後打開資產終端,算出你與財務自由的距離。" />
+  <meta property="og:image" content="https://asset-tracker-alpha-pearl.vercel.app/assets/cascade/class-group.webp" />
+  <meta property="og:url" content="https://asset-tracker-alpha-pearl.vercel.app/" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='38' fill='%23e8c987'/%3E%3Ccircle cx='64' cy='42' r='30' fill='%2308080a'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Onest:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script>/* 防主題閃爍:在 CSS 解析前套用已儲存主題 */
-    if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light';
-  </script>
-  <style>
-    /* ═══════════════════════════════════════════════════════
-       月光金融終端 · Moonlight Financial Terminal
-       Ethereal Glass · 對齊登月品牌 (#08080a / #e8c987)
-       ═══════════════════════════════════════════════════════ */
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Onest:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <!-- 封面固定深色星雲版,不跟主題偏好;工具(app.html)維持雙主題 -->
+  <!--
+    ══════════ 封面 · 登月學院品牌導覽(Cards Cascade)══════════
+    來源風格:網頁雛形/cards-cascade.html(GetLayers),重製為月光金雙主題。
 
+    ── 待補內容(佔位清單,交付時逐一搜尋替換)──
+    1. hero 標語「從月光/到登月」為草稿,待定稿 → 搜尋 hero__title
+    2. (已補 2026-07-10)講師資歷:水丰刀=閱部客 46 萬訂閱/兩年三十大影響力/協會理事;Indigo=PA 4 年/型態學教學
+    3. 章節01 創立原因:暫以登月文化宣言代位,可換創辦故事 → CONFIG.cards[0].meta
+    4. 學院課程/社群入口連結 → .launch-alt
+    5. 品牌 LOGO 檔在「登月品牌/」資料夾,現用 CSS 月亮徽記,可換
+    6. 學員見證三則節錄自 consult-site 公開見證原文(佔位性質,可抽換;
+       紀律:只節錄不改寫、不放收益保證類)→ .voice-grid
+  -->
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ═══ 月光金 tokens(與 app.html 同源)═══ */
     :root {
       --bg:            #08080a;
       --surface:       #111114;
       --surface-2:     #17171b;
-      --surface-3:     #1d1d23;
       --line:          rgba(243,241,234,0.08);
       --line-strong:   rgba(243,241,234,0.16);
       --text:          #f3f1ea;
-      --text2:         #8b8a82;
+      --text2:         #b3a08a;
       --gold:          #e8c987;
       --gold-2:        #c9a25c;
       --gold-soft:     rgba(232,201,135,0.12);
-      --pos:           #3ddc97;
-      --neg:           #ff7a70;
-      --warn:          #f5b04c;
-      --danger:        #ff7a70;
-      --accent:        var(--gold);
-      --accent2:       var(--pos);
-      --radius:        16px;
-      --radius-lg:     22px;
       --font-display:  'Anton', 'Noto Sans TC', sans-serif;
       --font-sans:     'Onest', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      --font-mono:     ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
       --ease:          cubic-bezier(0.22, 1, 0.36, 1);
       --ease-spring:   cubic-bezier(0.32, 0.72, 0, 1);
       --card-bg:       linear-gradient(180deg, #131318 0%, #0e0e12 100%);
       --card-ring:     0 0 0 1px rgba(243,241,234,0.07);
       --card-sheen:    inset 0 1px 0 rgba(255,255,255,0.055);
       --card-depth:    0 24px 48px -24px rgba(0,0,0,0.65);
-      --chart-tick:    #8b8a82;
-      --chart-grid:    rgba(243,241,234,0.06);
-      --gold-fill:     rgba(232,201,135,0.09);
-      --muted-fill:    rgba(139,138,130,0.07);
+      /* 封面專用 */
+      --wash-1:        #0d0d11;
+      --wash-2:        #08080a;
+      --nav-bg:        rgba(17,17,20,0.72);
+      --shell-fill:    rgba(243,241,234,0.035);
+      --grad-a:        #f6e3b4;
+      --grad-b:        #e8c987;
+      --grad-c:        #c9a25c;
+      --cta-face:      linear-gradient(90deg, #f97316 0%, #f5a623 55%, #eab308 100%);
+      --cta-ink:       #1a1002;
+      --cta-ico-bg:    rgba(0,0,0,0.18);
+      --sun-line:      rgba(255,190,110,0.30);
+      --sun-fill:      rgba(249,150,50,0.10);
+      --glass-shell:   rgba(255,255,255,0.05);
+      --glass-ring:    rgba(255,255,255,0.10);
     }
-
-    /* ── 淺色主題(羊皮紙暖色系,對齊登月品牌 light tokens)── */
-    :root[data-theme="light"] {
-      --bg:            #f5f1e6;
-      --surface:       #fdfaf2;
-      --surface-2:     #ece5d3;
-      --surface-3:     #e2d8c2;
-      --line:          rgba(38,34,26,0.09);
-      --line-strong:   rgba(38,34,26,0.18);
-      --text:          #26221a;
-      --text2:         #6d665a;
-      --gold:          #8a6a2c;
-      --gold-2:        #a8853e;
-      --gold-soft:     rgba(138,106,44,0.1);
-      --pos:           #0f8f63;
-      --neg:           #cc4a41;
-      --warn:          #b07818;
-      --danger:        #cc4a41;
-      --card-bg:       linear-gradient(180deg, #fdfaf2 0%, #f7f1e2 100%);
-      --card-ring:     0 0 0 1px rgba(38,34,26,0.08);
-      --card-sheen:    inset 0 1px 0 rgba(255,255,255,0.85);
-      --card-depth:    0 24px 48px -24px rgba(122,95,40,0.22);
-      --chart-tick:    #6d665a;
-      --chart-grid:    rgba(38,34,26,0.08);
-      --gold-fill:     rgba(138,106,44,0.08);
-      --muted-fill:    rgba(109,102,90,0.08);
-    }
-
-    html { background: var(--bg); }
-
+    html { background: var(--bg); scroll-behavior: smooth; }
     body {
       font-family: var(--font-sans);
-      background: var(--bg);
+      /* 不設 body 背景:z:-3 的星雲 canvas 屬於根堆疊層負層,會被 body 不透明背景蓋住;底色由 html 承擔 */
       color: var(--text);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       overflow-x: hidden;
     }
-
     ::selection { background: var(--gold); color: var(--bg); }
-
-    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar { width: 10px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 8px; border: 2px solid var(--bg); }
-    ::-webkit-scrollbar-thumb:hover { background: #2a2a32; }
+    ::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 8px; border: 2px solid var(--bg); }
 
-    /* 背景光暈 orbs + 膠片顆粒 */
+    /* 背景光暈 + 膠片顆粒(與 app.html 同款) */
     .bg-orbs {
       position: fixed; inset: 0; z-index: -2; pointer-events: none;
       background:
         radial-gradient(52% 44% at 82% -12%, rgba(232,201,135,0.075), transparent 62%),
-        radial-gradient(44% 38% at -8% 108%, rgba(61,220,151,0.05), transparent 60%),
-        radial-gradient(36% 30% at 50% 118%, rgba(124,140,248,0.045), transparent 60%);
+        radial-gradient(44% 38% at -8% 108%, rgba(61,220,151,0.05), transparent 60%);
     }
+    /* WebGL 金色星雲背景(無 WebGL2 時退回 fx-off 靜態金雲) */
+    #fx { position: fixed; inset: 0; z-index: -3; width: 100%; height: 100%;
+      display: block; pointer-events: none; background: #000; }
+    body.fx-on .bg-orbs { display: none; }
+    body.fx-on #cascade .sticky,
+    body.fx-off #cascade .sticky { background: transparent; }
+    /* 無 WebGL2 的備援:靜態金雲(重用 .bg-orbs 疊四層金暈) */
+    body.fx-off .bg-orbs {
+      background:
+        radial-gradient(42% 34% at 68% 20%, rgba(232,181,92,0.30), transparent 65%),
+        radial-gradient(56% 46% at 20% 74%, rgba(201,142,60,0.26), transparent 70%),
+        radial-gradient(30% 26% at 86% 76%, rgba(232,201,135,0.18), transparent 60%),
+        radial-gradient(26% 22% at 10% 16%, rgba(214,164,80,0.22), transparent 60%),
+        radial-gradient(130% 100% at 50% 12%, #0d0d11 0%, #08080a 78%);
+    }
+
     .bg-grain {
       position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.028;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    /* ── 浮島導覽 Fluid Island Nav ─────────────────────────── */
+    /* ═══ 浮島導覽 ═══ */
     .island-nav {
       position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
       z-index: 90;
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; gap: 8px;
       padding: 8px;
       border-radius: 999px;
-      background: rgba(17,17,20,0.72);
+      background: var(--nav-bg);
       backdrop-filter: blur(22px) saturate(1.3);
       -webkit-backdrop-filter: blur(22px) saturate(1.3);
-      box-shadow: 0 0 0 1px rgba(243,241,234,0.09),
+      box-shadow: 0 0 0 1px var(--line-strong),
                   inset 0 1px 0 rgba(255,255,255,0.06),
                   0 18px 40px -18px rgba(0,0,0,0.8);
       max-width: calc(100vw - 24px);
     }
-
     .logo {
       display: flex; align-items: center; gap: 9px;
-      padding: 7px 14px 7px 9px;
+      padding: 7px 12px 7px 9px;
       font-size: 14px; font-weight: 700; letter-spacing: 0.04em;
-      color: var(--text); white-space: nowrap;
+      color: var(--text); white-space: nowrap; text-decoration: none;
     }
     .logo .logo-moon {
       width: 26px; height: 26px; border-radius: 50%;
@@ -143,3794 +139,766 @@
       box-shadow: 0 0 14px rgba(232,201,135,0.35), inset 0 1px 1px rgba(255,255,255,0.5);
     }
     .logo .logo-moon svg { width: 14px; height: 14px; display: block; }
-
     .nav-sep { width: 1px; height: 22px; background: var(--line-strong); flex: none; }
-
-    .island-nav .tab {
-      appearance: none; border: 0; cursor: pointer;
-      font-family: var(--font-sans);
-      padding: 9px 18px; border-radius: 999px;
-      font-size: 13.5px; font-weight: 600; letter-spacing: 0.02em;
-      color: var(--text2); background: transparent;
-      transition: color 0.4s var(--ease), background 0.4s var(--ease), box-shadow 0.4s var(--ease), transform 0.4s var(--ease);
-      white-space: nowrap;
-    }
-    .island-nav .tab:hover { color: var(--text); transform: translateY(-1px); }
-    .island-nav .tab:active { transform: scale(0.97); }
-    .island-nav .tab.active {
-      color: var(--gold);
-      background: linear-gradient(180deg, rgba(232,201,135,0.14), rgba(232,201,135,0.06));
-      box-shadow: 0 0 0 1px rgba(232,201,135,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-
-    .total-badge {
-      display: flex; align-items: baseline; gap: 8px;
-      padding: 7px 16px; border-radius: 999px;
-      background: rgba(243,241,234,0.045);
-      box-shadow: inset 0 0 0 1px var(--line);
-      font-size: 11px; color: var(--text2);
-      letter-spacing: 0.14em; white-space: nowrap;
-    }
-    .total-badge span {
-      font-family: var(--font-display);
-      font-size: 15px; letter-spacing: 0.03em;
-      color: var(--gold);
-    }
-
-    .btn-clear-all {
-      display: flex; align-items: center; gap: 6px;
-      padding: 9px 14px;
-      background: transparent; border: 0; cursor: pointer;
-      border-radius: 999px;
-      font-family: var(--font-sans);
-      font-size: 12px; font-weight: 500; color: var(--text2);
-      box-shadow: inset 0 0 0 1px var(--line);
-      transition: color 0.35s var(--ease), box-shadow 0.35s var(--ease), background 0.35s var(--ease);
-      white-space: nowrap;
-    }
-    .btn-clear-all:hover {
-      color: var(--neg);
-      box-shadow: inset 0 0 0 1px rgba(255,122,112,0.45);
-      background: rgba(255,122,112,0.06);
-    }
-
-    /* 主題切換按鈕 */
-    .btn-theme {
-      appearance: none; border: 0; cursor: pointer;
-      width: 34px; height: 34px; border-radius: 50%;
-      background: transparent; color: var(--text2);
-      box-shadow: inset 0 0 0 1px var(--line);
-      display: grid; place-items: center; flex: none;
-      transition: color 0.35s var(--ease), box-shadow 0.35s var(--ease),
-                  background 0.35s var(--ease), transform 0.55s var(--ease-spring);
-    }
-    .btn-theme:hover {
-      color: var(--gold);
-      box-shadow: inset 0 0 0 1px rgba(232,201,135,0.45);
-      transform: rotate(18deg);
-    }
-    .btn-theme:active { transform: scale(0.92); }
-    .btn-theme .icon-sun { display: none; }
-    :root[data-theme="light"] .btn-theme .icon-sun { display: block; }
-    :root[data-theme="light"] .btn-theme .icon-moon { display: none; }
-    :root[data-theme="light"] .btn-theme:hover { box-shadow: inset 0 0 0 1px rgba(138,106,44,0.5); }
-
-    /* ── 淺色主題:元件級覆寫(硬編碼深色值)─────────────── */
-    :root[data-theme="light"] .bg-orbs {
-      background:
-        radial-gradient(52% 44% at 82% -12%, rgba(168,133,62,0.16), transparent 62%),
-        radial-gradient(44% 38% at -8% 108%, rgba(15,143,99,0.07), transparent 60%),
-        radial-gradient(36% 30% at 50% 118%, rgba(124,140,248,0.06), transparent 60%);
-    }
-    :root[data-theme="light"] .bg-grain { opacity: 0.04; }
-    :root[data-theme="light"] .island-nav {
-      background: rgba(253,250,242,0.78);
-      box-shadow: 0 0 0 1px rgba(38,34,26,0.1),
-                  inset 0 1px 0 rgba(255,255,255,0.9),
-                  0 18px 40px -18px rgba(122,95,40,0.35);
-    }
-    :root[data-theme="light"] .island-nav .tab.active {
-      background: linear-gradient(180deg, rgba(138,106,44,0.13), rgba(138,106,44,0.06));
-      box-shadow: 0 0 0 1px rgba(138,106,44,0.32), inset 0 1px 0 rgba(255,255,255,0.5);
-    }
-    :root[data-theme="light"] .total-badge { background: rgba(38,34,26,0.04); }
-    :root[data-theme="light"] .kpi-hero {
-      background:
-        radial-gradient(90% 130% at 85% -20%, rgba(168,133,62,0.13), transparent 55%),
-        var(--card-bg);
-    }
-    :root[data-theme="light"] .kpi-hero .dash-value { text-shadow: none; }
-    :root[data-theme="light"] .fire-card {
-      background:
-        radial-gradient(110% 150% at 92% -30%, rgba(168,133,62,0.11), transparent 55%),
-        var(--card-bg);
-    }
-    :root[data-theme="light"] .shell {
-      background: rgba(38,34,26,0.045);
-      box-shadow: 0 0 0 1px rgba(38,34,26,0.06), 0 30px 60px -30px rgba(122,95,40,0.3);
-    }
-    :root[data-theme="light"] .btn-ghost { background: rgba(38,34,26,0.045); }
-    :root[data-theme="light"] .btn-ghost:hover { background: rgba(38,34,26,0.09); }
-    :root[data-theme="light"] .icon-btn,
-    :root[data-theme="light"] .modal-close,
-    :root[data-theme="light"] .im-close-btn,
-    :root[data-theme="light"] .exp-nav-btn { background: rgba(38,34,26,0.05); }
-    :root[data-theme="light"] .icon-btn:hover,
-    :root[data-theme="light"] .modal-close:hover { background: rgba(38,34,26,0.1); }
-    /* 主品牌金按鈕在淺色下保持月光金漸層(品牌元素不隨主題變暗) */
-    :root[data-theme="light"] .btn-primary,
-    :root[data-theme="light"] .im-add-btn {
-      background: linear-gradient(180deg, #f0d69c, #e8c987 45%, #c9a25c);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.55),
-                  0 10px 24px -10px rgba(169,133,62,0.5);
-    }
-    :root[data-theme="light"] input[type="text"],
-    :root[data-theme="light"] input[type="number"],
-    :root[data-theme="light"] input[type="date"],
-    :root[data-theme="light"] select {
-      background: rgba(255,255,255,0.6);
-      color-scheme: light;
-    }
-    :root[data-theme="light"] input:focus,
-    :root[data-theme="light"] select:focus {
-      background: rgba(255,255,255,0.85);
-      box-shadow: inset 0 0 0 1px rgba(138,106,44,0.6), 0 0 0 4px rgba(138,106,44,0.1);
-    }
-    :root[data-theme="light"] .alloc-bar-track,
-    :root[data-theme="light"] .income-alloc-bar { background: rgba(38,34,26,0.08); }
-    :root[data-theme="light"] .alloc-bar-target-line { background: #26221a; box-shadow: 0 0 6px rgba(38,34,26,0.4); }
-    :root[data-theme="light"] .forecast-slider {
-      background: linear-gradient(90deg, var(--gold) var(--fc-fill, 33%), rgba(38,34,26,0.12) var(--fc-fill, 33%));
-    }
-    :root[data-theme="light"] .dca-section { background: rgba(38,34,26,0.03); }
-    :root[data-theme="light"] .fire-milestone { background: rgba(38,34,26,0.03); }
-    :root[data-theme="light"] .disclaimer { background: rgba(38,34,26,0.03); }
-    :root[data-theme="light"] .modal {
-      background: linear-gradient(180deg, #fdfaf2, #f5efe0);
-      box-shadow: 0 0 0 1px rgba(38,34,26,0.14),
-                  inset 0 1px 0 rgba(255,255,255,0.9),
-                  0 40px 80px -32px rgba(80,62,25,0.4);
-    }
-    :root[data-theme="light"] .modal-overlay { background: rgba(80,68,42,0.32); }
-    :root[data-theme="light"] .exp-popover {
-      background: #fdfaf2;
-      box-shadow: 0 0 0 1px rgba(38,34,26,0.14), 0 24px 48px -16px rgba(80,62,25,0.35);
-    }
-    :root[data-theme="light"] #toast {
-      background: rgba(253,250,242,0.95);
-      box-shadow: 0 0 0 1px rgba(38,34,26,0.14), 0 20px 40px -16px rgba(80,62,25,0.4);
-    }
-    :root[data-theme="light"] .flu-img { filter: saturate(0.85) brightness(1.02) contrast(1); }
-    :root[data-theme="light"] .flu-item:hover .flu-img { filter: saturate(1) brightness(1.05); }
-    :root[data-theme="light"] ::-webkit-scrollbar-thumb { background: #cfc4a8; border-color: #f5f1e6; }
-    :root[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: #bfb190; }
-    :root[data-theme="light"] .badge-under { color: #4356c9; background: rgba(67,86,201,0.09); box-shadow: inset 0 0 0 1px rgba(67,86,201,0.3); }
-
-    /* ── 主版面 ────────────────────────────────────────────── */
-    main {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 128px 32px 90px;
-    }
-
-    .page { display: none; }
-    .page.active { display: block; }
-
-    /* 進場編舞：分頁切換時卡片逐一浮現 */
-    @keyframes riseIn {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .page.active > * { opacity: 0; animation: riseIn 0.8s var(--ease) forwards; }
-    .page.active > *:nth-child(1) { animation-delay: 0.02s; }
-    .page.active > *:nth-child(2) { animation-delay: 0.09s; }
-    .page.active > *:nth-child(3) { animation-delay: 0.16s; }
-    .page.active > *:nth-child(4) { animation-delay: 0.23s; }
-    .page.active > *:nth-child(5) { animation-delay: 0.30s; }
-    .page.active > *:nth-child(6) { animation-delay: 0.37s; }
-    .page.active > *:nth-child(7) { animation-delay: 0.44s; }
-    .page.active > *:nth-child(8) { animation-delay: 0.51s; }
-
-    /* ── Section 標頭 ─────────────────────────────────────── */
-    .section-header {
-      display: flex; align-items: flex-end; justify-content: space-between;
-      gap: 16px; margin-bottom: 26px;
-    }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 4px 12px; border-radius: 999px;
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--gold);
-      background: var(--gold-soft);
-      box-shadow: inset 0 0 0 1px rgba(232,201,135,0.22);
-      margin-bottom: 12px;
-    }
-    .eyebrow::before {
-      content: ''; width: 5px; height: 5px; border-radius: 50%;
-      background: var(--gold); box-shadow: 0 0 8px var(--gold);
-    }
-    .section-title {
-      font-size: 26px; font-weight: 700; letter-spacing: 0.01em;
-      line-height: 1.1;
-    }
-    .section-title small {
-      display: block; margin-top: 7px;
-      font-size: 12.5px; font-weight: 400; color: var(--text2);
-      letter-spacing: 0.06em;
-    }
-
-    /* ── 卡片系統(Double-Bezel 質感)────────────────────── */
-    .card, .dash-card, .summary-card, .income-metric-card,
-    .exp-quick-panel, .exp-list-card, .exp-pie-card, .forecast-life-units {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--card-ring), var(--card-sheen), var(--card-depth);
-    }
-    .card { padding: 24px; }
-
-    /* 外殼:機械托盤(用於主力卡片)*/
-    .shell {
-      background: rgba(243,241,234,0.035);
-      border-radius: var(--radius-lg);
-      padding: 7px;
-      box-shadow: 0 0 0 1px rgba(243,241,234,0.06),
-                  0 30px 60px -30px rgba(0,0,0,0.7);
-      margin-bottom: 20px;
-    }
-    .shell > .card, .shell > .dash-card {
-      border-radius: calc(var(--radius-lg) - 7px);
-      box-shadow: var(--card-ring), var(--card-sheen);
-      margin: 0;
-    }
-
-    .card-title {
-      font-size: 15px; font-weight: 700; letter-spacing: 0.03em;
-      color: var(--text);
-      display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
-    }
-    .card-sub, .dash-card-sub {
-      font-size: 11.5px; font-weight: 400; color: var(--text2); letter-spacing: 0.05em;
-    }
-
-    /* ── KPI Bento ────────────────────────────────────────── */
-    .dash-metrics {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    .dash-card { padding: 22px 24px; position: relative; }
-    .dash-metrics > .dash-card:nth-child(1) { grid-column: span 5; }
-    .dash-metrics > .dash-card:nth-child(2) { grid-column: span 3; }
-    .dash-metrics > .dash-card:nth-child(3) { grid-column: span 2; }
-    .dash-metrics > .dash-card:nth-child(4) { grid-column: span 2; }
-
-    .kpi-hero {
-      background:
-        radial-gradient(90% 130% at 85% -20%, rgba(232,201,135,0.13), transparent 55%),
-        var(--card-bg);
-    }
-    .kpi-hero .dash-value {
-      font-family: var(--font-display);
-      font-size: 46px; letter-spacing: 0.02em; line-height: 1.05;
-      color: var(--gold);
-      text-shadow: 0 0 28px rgba(232,201,135,0.25);
-    }
-
-    .dash-label {
-      font-size: 10.5px; font-weight: 600; color: var(--text2);
-      letter-spacing: 0.2em; text-transform: uppercase;
-      margin-bottom: 12px;
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-    }
-    .dash-value {
-      font-size: 25px; font-weight: 700; letter-spacing: 0.01em;
-      font-variant-numeric: tabular-nums;
-      line-height: 1.15;
-      overflow-wrap: anywhere;
-    }
-    .dash-value--name {
-      font-size: 19px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      max-width: 100%;
-    }
-    .dash-sub {
-      margin-top: 9px; font-size: 12px; color: var(--text2); letter-spacing: 0.02em;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-    .dash-card-title {
-      font-size: 15px; font-weight: 700; letter-spacing: 0.03em;
-      display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
-    }
-
-    .positive, .value.positive, .dash-value.positive, .imc-value.positive { color: var(--pos); }
-    .negative, .value.negative, .dash-value.negative, .imc-value.negative { color: var(--neg); }
-
-    /* ── 按鈕系統 ─────────────────────────────────────────── */
-    .btn {
-      appearance: none; cursor: pointer;
-      font-family: var(--font-sans);
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 11px 22px;
-      border-radius: 999px; border: 0;
-      font-size: 13.5px; font-weight: 600; letter-spacing: 0.03em;
-      transition: transform 0.45s var(--ease-spring), box-shadow 0.45s var(--ease-spring),
-                  background 0.45s var(--ease-spring), color 0.45s var(--ease-spring);
-      white-space: nowrap;
-    }
-    .btn:active { transform: scale(0.97); }
-
-    .btn-primary {
-      background: linear-gradient(180deg, #f0d69c, var(--gold) 45%, var(--gold-2));
-      color: #191307;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.55),
-                  0 10px 24px -10px rgba(232,201,135,0.55);
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.55),
-                  0 16px 32px -12px rgba(232,201,135,0.65);
-    }
-    /* Button-in-Button 內嵌圓標 */
-    .btn-primary .btn-orb {
-      width: 22px; height: 22px; border-radius: 50%;
-      display: grid; place-items: center; flex: none;
-      background: rgba(8,8,10,0.16);
-      box-shadow: inset 0 1px 1px rgba(0,0,0,0.18);
-      font-size: 13px; line-height: 1;
-      transition: transform 0.45s var(--ease-spring);
-      margin-right: -6px;
-    }
-    .btn-primary:hover .btn-orb { transform: translateX(2px) scale(1.08); }
-
-    .btn-ghost {
-      background: rgba(243,241,234,0.04);
-      color: var(--text2);
-      box-shadow: inset 0 0 0 1px var(--line-strong);
-    }
-    .btn-ghost:hover { color: var(--text); background: rgba(243,241,234,0.08); }
-
-    .btn-danger {
-      background: rgba(255,122,112,0.08);
-      color: var(--neg);
-      box-shadow: inset 0 0 0 1px rgba(255,122,112,0.3);
-    }
-    .btn-danger:hover { background: rgba(255,122,112,0.16); }
-
-    .btn-sm { padding: 6px 13px; font-size: 12px; }
-
-    .icon-btn {
-      appearance: none; border: 0; cursor: pointer;
-      background: rgba(243,241,234,0.05);
-      color: var(--text2);
-      border-radius: 999px;
-      width: 26px; height: 26px;
-      display: inline-grid; place-items: center;
-      font-size: 13px; line-height: 1;
-      box-shadow: inset 0 0 0 1px var(--line);
-      transition: color 0.3s var(--ease), background 0.3s var(--ease);
-    }
-    .icon-btn:hover { color: var(--text); background: rgba(243,241,234,0.1); }
-
-    /* ── 徽章 ─────────────────────────────────────────────── */
-    .category-badge {
-      display: inline-block; padding: 4px 11px;
-      border-radius: 999px;
-      font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em;
-      box-shadow: inset 0 0 0 1px rgba(243,241,234,0.06);
-      white-space: nowrap;
-    }
-    .dca-badge {
-      display: inline-block; padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px; font-weight: 600;
-      color: var(--gold); background: var(--gold-soft);
-      box-shadow: inset 0 0 0 1px rgba(232,201,135,0.24);
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-
-    /* ── 篩選 chips ───────────────────────────────────────── */
-    .filter-bar {
-      display: flex; flex-wrap: wrap; gap: 8px;
-    }
-    .filter-chip {
-      appearance: none; cursor: pointer;
-      font-family: var(--font-sans);
-      padding: 7px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--line-strong);
-      background: transparent;
-      font-size: 12.5px; font-weight: 600; letter-spacing: 0.03em;
-      color: var(--text2);
-      transition: all 0.35s var(--ease);
-    }
-    .filter-chip:hover { transform: translateY(-1px); }
-    .filter-chip.active {
-      background: var(--text); border-color: var(--text); color: var(--bg);
-    }
-
-    /* ── 表格 ─────────────────────────────────────────────── */
-    .table-wrap { overflow-x: auto; margin-top: 18px; }
-    table { width: 100%; border-collapse: collapse; min-width: 760px; }
-    thead th {
-      text-align: left;
-      font-size: 10.5px; font-weight: 600;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--text2);
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--line-strong);
-      white-space: nowrap;
-    }
-    tbody td {
-      padding: 15px 14px;
-      font-size: 13.5px;
-      border-bottom: 1px solid var(--line);
-      font-variant-numeric: tabular-nums;
-      vertical-align: middle;
-    }
-    tbody tr { transition: background 0.3s var(--ease); }
-    tbody tr:hover { background: rgba(243,241,234,0.025); }
-    tfoot td {
-      padding: 14px; font-size: 13px; font-weight: 700;
-      color: var(--gold);
-      font-variant-numeric: tabular-nums;
-      border-top: 1px solid var(--line-strong);
-    }
-    tfoot .tf-label { color: var(--text2); font-weight: 500; letter-spacing: 0.05em; }
-
-    /* ── 空狀態 ───────────────────────────────────────────── */
-    .empty-state {
-      text-align: center; padding: 44px 20px; color: var(--text2);
-    }
-    .empty-state .icon { font-size: 30px; margin-bottom: 12px; opacity: 0.8; }
-    .empty-state p { font-size: 13.5px; letter-spacing: 0.04em; line-height: 1.7; }
-    .empty-state .empty-actions {
-      display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap;
-    }
-
-    /* ── 配置卡(甜甜圈 + 進度列)──────────────────────────── */
-    .alloc-unified-header {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 14px; margin-bottom: 20px;
-    }
-    .alloc-unified-body {
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 34px;
-      align-items: center;
-    }
-    .doughnut-wrap { position: relative; max-width: 300px; margin: 0 auto; }
-
-    .alloc-cat-row {
-      display: grid;
-      grid-template-columns: 150px 1fr 170px 108px;
-      align-items: center; gap: 14px;
-      padding: 9px 0;
-    }
-    .alloc-cat-label { display: flex; align-items: center; gap: 9px; min-width: 0; }
-    .alloc-cat-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex: none;
-      box-shadow: 0 0 8px currentColor;
-    }
-    .alloc-cat-name {
-      font-size: 13px; font-weight: 600; letter-spacing: 0.02em;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .alloc-bar-wrap { min-width: 0; }
-    .alloc-bar-track {
-      position: relative; height: 7px;
-      background: rgba(243,241,234,0.06);
-      border-radius: 999px;
-    }
-    .alloc-bar-clip { overflow: hidden; border-radius: 999px; height: 100%; }
-    .alloc-bar-fill {
-      height: 100%; border-radius: 999px;
-      transition: width 0.9s var(--ease);
-      box-shadow: 0 0 10px -2px currentColor;
-    }
-    .alloc-bar-target-line {
-      position: absolute; top: -4px; bottom: -4px; width: 2px;
-      background: var(--text);
-      border-radius: 2px;
-      opacity: 0.75;
-      box-shadow: 0 0 6px rgba(243,241,234,0.5);
-    }
-    .alloc-pct-info {
-      font-size: 11.5px; color: var(--text2);
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap; text-align: right;
-    }
-    .alloc-badge {
-      justify-self: end;
-      display: inline-block; padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em;
-      white-space: nowrap;
-    }
-    .badge-ok        { color: var(--pos);  background: rgba(61,220,151,0.1);  box-shadow: inset 0 0 0 1px rgba(61,220,151,0.3); }
-    .badge-over      { color: var(--warn); background: rgba(245,176,76,0.1);  box-shadow: inset 0 0 0 1px rgba(245,176,76,0.3); }
-    .badge-under     { color: #7c9cf5;     background: rgba(124,156,245,0.1); box-shadow: inset 0 0 0 1px rgba(124,156,245,0.3); }
-    .badge-no-target { color: var(--text2); background: rgba(243,241,234,0.05); box-shadow: inset 0 0 0 1px var(--line); }
-
-    /* ── 摘要卡列 ─────────────────────────────────────────── */
-    .summary-row, .forecast-summary-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    .summary-card { padding: 20px 22px; }
-    .summary-card .label {
-      font-size: 10.5px; font-weight: 600; color: var(--text2);
-      letter-spacing: 0.18em; text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .summary-card .value {
-      font-size: 23px; font-weight: 700;
-      font-variant-numeric: tabular-nums; letter-spacing: 0.01em;
-      overflow-wrap: anywhere;
-    }
-    .summary-card .sub { margin-top: 8px; font-size: 11.5px; color: var(--text2); }
-
-    /* DCA 摘要條 */
-    .dca-summary-strip {
-      display: flex; flex-wrap: wrap; gap: 10px 26px;
-      padding: 13px 18px;
-      margin-top: 16px;
-      border-radius: 12px;
-      background: var(--gold-soft);
-      box-shadow: inset 0 0 0 1px rgba(232,201,135,0.18);
-      font-size: 12.5px; color: var(--text2);
-    }
-    .dca-summary-strip b {
-      color: var(--gold); font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      margin-left: 6px;
-    }
-
-    /* ── 收支頁 ───────────────────────────────────────────── */
-    .income-metrics-row {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 14px; margin-bottom: 20px;
-    }
-    .income-metric-card { padding: 20px 22px; }
-    .imc-label {
-      font-size: 10.5px; font-weight: 600; color: var(--text2);
-      letter-spacing: 0.18em; text-transform: uppercase;
-      margin-bottom: 10px;
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-    }
-    .imc-value {
-      font-size: 23px; font-weight: 700;
-      font-variant-numeric: tabular-nums;
-    }
-    .imc-sub { margin-top: 8px; font-size: 11.5px; color: var(--text2);
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-    .income-alloc-wrap {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--card-ring), var(--card-sheen), var(--card-depth);
-      padding: 22px 24px;
-      margin-bottom: 20px;
-    }
-    .income-alloc-title {
-      font-size: 14px; font-weight: 700; letter-spacing: 0.04em;
-      margin-bottom: 16px;
-      display: flex; align-items: baseline; gap: 10px;
-    }
-    .income-alloc-bar {
-      display: flex; height: 12px;
-      border-radius: 999px; overflow: hidden;
-      background: rgba(243,241,234,0.05);
-      box-shadow: inset 0 0 0 1px var(--line);
-    }
-    .income-alloc-segment { transition: width 0.9s var(--ease); }
-    .income-alloc-labels {
-      display: flex; flex-wrap: wrap; gap: 10px 28px;
-      margin-top: 14px;
-    }
-    .income-alloc-label-item {
-      display: flex; align-items: baseline; gap: 8px;
-      font-size: 12.5px;
-    }
-    .ial-dot { width: 8px; height: 8px; border-radius: 50%; align-self: center; flex: none; }
-    .ial-name { color: var(--text2); }
-    .ial-val  { font-weight: 700; font-variant-numeric: tabular-nums; }
-    .ial-pct  { color: var(--text2); font-size: 11.5px; font-variant-numeric: tabular-nums; }
-    .income-alloc-overflow {
-      display: none; margin-top: 14px;
-      padding: 10px 14px; border-radius: 10px;
-      font-size: 12.5px; color: var(--warn);
-      background: rgba(245,176,76,0.08);
-      box-shadow: inset 0 0 0 1px rgba(245,176,76,0.25);
-    }
-    .income-alloc-overflow[style*="display: "] { }
-
-    /* 快速記帳 */
-    .exp-quick-panel { padding: 20px 24px; margin-bottom: 20px; }
-    .exp-quick-title {
-      font-size: 10.5px; font-weight: 600; color: var(--gold);
-      letter-spacing: 0.22em; text-transform: uppercase;
-      margin-bottom: 14px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .exp-quick-title::before {
-      content: ''; width: 5px; height: 5px; border-radius: 50%;
-      background: var(--gold); box-shadow: 0 0 8px var(--gold);
-    }
-    .exp-quick-row {
-      display: grid;
-      grid-template-columns: 130px 120px 1fr 150px auto;
-      gap: 12px; align-items: end;
-    }
-
-    .exp-main-grid {
-      display: grid; grid-template-columns: 1fr 380px;
-      gap: 20px; align-items: start;
-    }
-    .exp-month-nav {
-      display: flex; align-items: center; justify-content: center;
-      gap: 16px; margin-bottom: 14px;
-    }
-    .exp-nav-btn {
-      appearance: none; cursor: pointer; border: 0;
-      width: 32px; height: 32px; border-radius: 50%;
-      background: rgba(243,241,234,0.05);
-      color: var(--text2); font-size: 17px;
-      box-shadow: inset 0 0 0 1px var(--line);
-      transition: all 0.3s var(--ease);
-      display: grid; place-items: center;
-    }
-    .exp-nav-btn:hover:not(:disabled) { color: var(--gold); box-shadow: inset 0 0 0 1px rgba(232,201,135,0.4); }
-    .exp-nav-btn:disabled { opacity: 0.3; cursor: default; }
-    .exp-month-label {
-      font-family: var(--font-display);
-      font-size: 17px; letter-spacing: 0.08em; color: var(--text);
-      min-width: 88px; text-align: center;
-    }
-    .exp-list-card { padding: 8px 20px; min-height: 200px; }
-    .exp-item {
-      display: grid;
-      grid-template-columns: 82px 1fr 52px 110px 30px;
-      align-items: center; gap: 12px;
-      padding: 13px 2px;
-      border-bottom: 1px solid var(--line);
-    }
-    .exp-item:last-child { border-bottom: 0; }
-    .exp-item-note {
-      font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-    .exp-item-date { font-size: 11.5px; color: var(--text2); font-variant-numeric: tabular-nums; }
-    .exp-item-amount {
-      font-size: 13.5px; font-weight: 700; color: var(--neg);
-      text-align: right; font-variant-numeric: tabular-nums;
-    }
-    .exp-item-del {
-      appearance: none; border: 0; cursor: pointer;
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 6px 6px 6px 16px; border-radius: 999px;
+      background: var(--cta-face); color: var(--cta-ink);
+      font-size: 13px; font-weight: 700; letter-spacing: 0.03em;
+      text-decoration: none; white-space: nowrap;
+      box-shadow: 0 8px 22px -10px rgba(249,130,30,0.55), inset 0 1px 0 rgba(255,255,255,0.45);
+      transition: transform 0.5s var(--ease-spring), box-shadow 0.5s var(--ease);
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -10px rgba(249,130,30,0.68), inset 0 1px 0 rgba(255,255,255,0.45); }
+    .nav-cta:active { transform: scale(0.97); }
+    .nav-cta .ico {
       width: 24px; height: 24px; border-radius: 50%;
-      background: transparent; color: var(--text2);
-      font-size: 12px; line-height: 1;
-      transition: all 0.3s var(--ease);
+      background: var(--cta-ico-bg);
       display: grid; place-items: center;
-    }
-    .exp-item-del:hover { color: var(--neg); background: rgba(255,122,112,0.1); }
-    .exp-pie-card { padding: 22px 24px; }
-
-    /* 收支明細 popover */
-    .exp-popover {
-      position: absolute; top: 46px; right: 14px; z-index: 30;
-      width: 230px;
-      background: var(--surface-3);
-      border-radius: 14px;
-      box-shadow: 0 0 0 1px var(--line-strong), 0 24px 48px -16px rgba(0,0,0,0.8);
-      padding: 14px 16px;
-      opacity: 0; transform: translateY(-6px) scale(0.98);
-      pointer-events: none;
-      transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
-    }
-    .exp-popover.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-    .exp-popover-row {
-      display: flex; justify-content: space-between; align-items: baseline;
-      padding: 6px 0; font-size: 12.5px;
-    }
-    .epr-label { color: var(--text2); }
-    .epr-val { font-weight: 600; font-variant-numeric: tabular-nums; }
-    .epr-result { border-top: 1px solid var(--line-strong); margin-top: 6px; padding-top: 10px; }
-    .epr-result .epr-label { color: var(--text); font-weight: 600; }
-
-    /* ── 預測頁 ───────────────────────────────────────────── */
-    .forecast-params { margin-bottom: 20px; }
-    .forecast-top-row {
-      display: grid; grid-template-columns: 1fr auto;
-      gap: 30px; margin-bottom: 22px;
-    }
-    .forecast-field-label {
-      font-size: 10.5px; font-weight: 600; color: var(--text2);
-      letter-spacing: 0.18em; text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .forecast-slider-wrap { display: flex; align-items: center; gap: 20px; }
-    .forecast-slider {
-      flex: 1; appearance: none; -webkit-appearance: none;
-      height: 5px; border-radius: 999px;
-      background: linear-gradient(90deg, var(--gold) var(--fc-fill, 33%), rgba(243,241,234,0.1) var(--fc-fill, 33%));
-      outline: none;
-    }
-    .forecast-slider::-webkit-slider-thumb {
-      appearance: none; -webkit-appearance: none;
-      width: 20px; height: 20px; border-radius: 50%;
-      background: radial-gradient(120% 120% at 30% 25%, #f2ddb0, var(--gold-2));
-      box-shadow: 0 0 0 4px rgba(232,201,135,0.18), 0 4px 12px rgba(0,0,0,0.5);
-      cursor: grab;
-      transition: box-shadow 0.3s var(--ease);
-    }
-    .forecast-slider::-webkit-slider-thumb:hover { box-shadow: 0 0 0 7px rgba(232,201,135,0.22), 0 4px 12px rgba(0,0,0,0.5); }
-    .forecast-slider::-moz-range-thumb {
-      width: 20px; height: 20px; border-radius: 50%; border: 0;
-      background: var(--gold);
-      box-shadow: 0 0 0 4px rgba(232,201,135,0.18);
-      cursor: grab;
-    }
-    .forecast-slider-val {
-      font-family: var(--font-display);
-      font-size: 30px; color: var(--gold); letter-spacing: 0.02em;
-      min-width: 70px; text-align: right;
-    }
-    .slider-minmax {
-      display: flex; justify-content: space-between;
-      font-size: 10.5px; color: var(--text2); margin-top: 8px;
-      letter-spacing: 0.08em;
-    }
-
-    .inflation-badge {
-      display: inline-block; padding: 4px 12px;
-      border-radius: 999px;
-      font-size: 11px; font-weight: 600;
-      color: var(--warn); background: rgba(245,176,76,0.09);
-      box-shadow: inset 0 0 0 1px rgba(245,176,76,0.28);
-      opacity: 0; transform: translateY(-3px);
-      transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
-    }
-    .inflation-badge.visible { opacity: 1; transform: translateY(0); }
-
-    .forecast-rates-title {
-      font-size: 10.5px; font-weight: 600; color: var(--text2);
-      letter-spacing: 0.18em; text-transform: uppercase;
-      margin: 4px 0 14px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-    }
-    .forecast-rates-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
-      gap: 10px 22px;
-    }
-    .forecast-rate-row { display: flex; align-items: center; gap: 9px; }
-    .forecast-rate-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex: none;
-      box-shadow: 0 0 8px currentColor;
-    }
-    .forecast-rate-name {
-      flex: 1; font-size: 13px; font-weight: 600;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    /* 提高特異度:壓過全域 input[type="number"]{width:100%} */
-    .forecast-rate-row .forecast-rate-input {
-      width: 76px; flex: none; text-align: right;
-      padding: 7px 10px;
-    }
-    .forecast-rate-unit { font-size: 11.5px; color: var(--text2); white-space: nowrap; }
-
-    /* 人生單位 */
-    .forecast-life-units { padding: 24px; margin-bottom: 20px; }
-    .flu-header { margin-bottom: 18px; }
-    .flu-title { font-size: 15px; font-weight: 700; letter-spacing: 0.03em; }
-    .flu-title span { color: var(--gold); font-family: var(--font-display); font-size: 17px; letter-spacing: 0.05em; }
-    .flu-subtitle { margin-top: 6px; font-size: 11.5px; color: var(--text2); }
-    .flu-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-    }
-    .flu-item {
-      border-radius: 14px; overflow: hidden;
-      background: var(--surface-2);
-      box-shadow: inset 0 0 0 1px var(--line);
-      transition: transform 0.5s var(--ease-spring), box-shadow 0.5s var(--ease-spring);
-    }
-    .flu-item:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--line-strong), 0 18px 36px -18px rgba(0,0,0,0.8); }
-    .flu-img {
-      width: 100%; height: 92px; object-fit: cover; display: block;
-      filter: saturate(0.55) brightness(0.72) contrast(1.05);
-      transition: filter 0.6s var(--ease);
-    }
-    .flu-item:hover .flu-img { filter: saturate(0.9) brightness(0.85) contrast(1.02); }
-    .flu-item-body { padding: 14px 16px 16px; }
-    .flu-number {
-      font-family: var(--font-display);
-      font-size: 24px; color: var(--gold); letter-spacing: 0.03em;
-    }
-    .flu-unit { margin-top: 3px; font-size: 12.5px; font-weight: 600; }
-    .flu-note { margin-top: 3px; font-size: 10.5px; color: var(--text2); }
-
-    .disclaimer {
-      margin-top: 28px;
-      padding: 16px 20px 16px 22px;
-      background: rgba(243,241,234,0.025);
-      border-radius: 12px;
-      box-shadow: inset 0 0 0 1px var(--line);
-      border-left: 3px solid var(--gold-2);
-    }
-    .disclaimer ul {
-      margin: 0; padding-left: 18px;
-      font-size: 11.5px; color: var(--text2); line-height: 1.9;
-      list-style: disc;
-    }
-
-    /* ── 表單 ─────────────────────────────────────────────── */
-    input[type="text"], input[type="number"], input[type="date"], select {
-      font-family: var(--font-sans);
-      width: 100%;
-      padding: 11px 14px;
-      border-radius: 11px;
-      border: 0;
-      background: rgba(243,241,234,0.05);
-      box-shadow: inset 0 0 0 1px var(--line-strong);
-      color: var(--text);
-      font-size: 13.5px;
-      transition: box-shadow 0.3s var(--ease), background 0.3s var(--ease);
-      font-variant-numeric: tabular-nums;
-      color-scheme: dark;
-    }
-    input:focus, select:focus {
-      outline: none;
-      box-shadow: inset 0 0 0 1px rgba(232,201,135,0.55), 0 0 0 4px rgba(232,201,135,0.1);
-      background: rgba(243,241,234,0.07);
-    }
-    input::placeholder { color: rgba(139,138,130,0.65); }
-    select option { background: var(--surface-3); color: var(--text); }
-
-    .field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
-    .field label {
-      font-size: 10.5px; font-weight: 600; color: var(--text2);
-      letter-spacing: 0.14em; text-transform: uppercase;
-    }
-    .form-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-    }
-    .field.full { grid-column: 1 / -1; }
-    .form-actions, .modal-actions {
-      display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;
-    }
-
-    /* ── Modal ────────────────────────────────────────────── */
-    .modal-overlay {
-      position: fixed; inset: 0; z-index: 100;
-      display: grid; place-items: center;
-      padding: 24px;
-      background: rgba(5,5,7,0.78);
-      opacity: 0; pointer-events: none; visibility: hidden;
-      transition: opacity 0.4s var(--ease), visibility 0.4s var(--ease);
-      overflow-y: auto;
-    }
-    .modal-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
-    .modal {
-      position: relative;
-      width: 100%; max-width: 560px;
-      background: linear-gradient(180deg, #16161b, #101014);
-      border-radius: 20px;
-      box-shadow: 0 0 0 1px var(--line-strong),
-                  inset 0 1px 0 rgba(255,255,255,0.07),
-                  0 40px 80px -32px rgba(0,0,0,0.9);
-      padding: 28px;
-      transform: translateY(16px) scale(0.98);
       transition: transform 0.5s var(--ease-spring);
-      max-height: calc(100vh - 48px);
-      overflow-y: auto;
     }
-    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
-    .modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    .modal-title { font-size: 17px; font-weight: 700; letter-spacing: 0.03em; margin-bottom: 20px; }
-    .modal-header .modal-title { margin-bottom: 0; }
-    .modal-body { }
-    .modal-close {
-      position: absolute; top: 20px; right: 20px;
-      appearance: none; border: 0; cursor: pointer;
-      width: 30px; height: 30px; border-radius: 50%;
-      background: rgba(243,241,234,0.05);
-      color: var(--text2); font-size: 13px;
-      box-shadow: inset 0 0 0 1px var(--line);
-      transition: all 0.3s var(--ease);
-      display: grid; place-items: center;
-    }
-    .modal-close:hover { color: var(--text); background: rgba(243,241,234,0.1); }
+    .nav-cta:hover .ico { transform: translateX(2px); }
+    .nav-cta .ico svg { width: 12px; height: 12px; }
 
-    /* 目標配置編輯器 */
-    .target-editor-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 9px 20px;
+    /* ═══ Cards Cascade(捲動驅動 3D 卡片瀑布)═══ */
+    #cascade { position: relative; }
+    #cascade .sticky {
+      position: sticky; top: 0; height: 100vh; overflow: hidden;
+      background: radial-gradient(130% 100% at 50% 12%, var(--wash-1) 0%, var(--wash-2) 78%);
+      user-select: none; -webkit-user-select: none;
     }
-    .target-input-row { display: flex; align-items: center; gap: 9px; }
-    .target-cat-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex: none;
-      box-shadow: 0 0 8px currentColor;
-    }
-    .target-cat-name {
-      flex: 1; font-size: 13px; font-weight: 600;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .target-input-row .target-input { width: 72px; flex: none; text-align: right; padding: 7px 10px; }
-    .target-pct-label { font-size: 12px; color: var(--text2); }
-
-    /* DCA 摺疊區 */
-    .dca-section {
-      border-radius: 13px;
-      background: rgba(243,241,234,0.028);
-      box-shadow: inset 0 0 0 1px var(--line);
-      overflow: hidden;
-    }
-    .dca-toggle-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 13px 16px;
-      cursor: pointer;
-      font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em;
-      color: var(--text2);
-      transition: color 0.3s var(--ease);
-      user-select: none;
-    }
-    .dca-toggle-header:hover { color: var(--text); }
-    .dca-arrow { transition: transform 0.4s var(--ease); font-size: 10px; }
-    .dca-section.open .dca-arrow { transform: rotate(180deg); }
-    .dca-body { display: none; padding: 2px 16px 16px; }
-    .dca-section.open .dca-body { display: block; }
-    .dca-enable-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-    .dca-fields { display: none; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .dca-fields.visible { display: grid; }
-
-    /* Toggle switch */
-    .toggle-switch { position: relative; display: inline-block; width: 42px; height: 24px; flex: none; cursor: pointer; }
-    .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
-    .toggle-track {
+    #stage {
       position: absolute; inset: 0;
-      border-radius: 999px;
-      background: rgba(243,241,234,0.09);
-      box-shadow: inset 0 0 0 1px var(--line-strong);
-      transition: background 0.4s var(--ease), box-shadow 0.4s var(--ease);
+      perspective: var(--persp, 1500px);
+      perspective-origin: var(--vanishX, 50%) var(--vanish, 40%);
     }
-    .toggle-track::after {
-      content: '';
-      position: absolute; top: 3px; left: 3px;
-      width: 18px; height: 18px; border-radius: 50%;
-      background: var(--text2);
-      transition: transform 0.45s var(--ease-spring), background 0.45s var(--ease-spring);
+    #deck { position: absolute; left: var(--deckX, 50%); top: var(--deckY, 50%); width: 0; height: 0; transform-style: preserve-3d; }
+    .card {
+      position: absolute; width: var(--cw, 380px); height: var(--ch, 440px);
+      left: calc(var(--cw, 380px) / -2); top: calc(var(--ch, 440px) / -2);
+      transform-style: preserve-3d; will-change: transform, opacity;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
     }
-    .toggle-switch input:checked + .toggle-track {
-      background: var(--gold-soft);
-      box-shadow: inset 0 0 0 1px rgba(232,201,135,0.5);
+    .card__face {
+      position: absolute; inset: 0; border-radius: var(--radius, 28px); overflow: hidden;
+      background: #0a0e18;
+      box-shadow:
+        0 2px 3px rgba(0,0,0,0.12),
+        0 24px 44px -18px rgba(0,0,0,0.5),
+        inset 0 0 0 1px rgba(255,205,130,0.18);
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
     }
-    .toggle-switch input:checked + .toggle-track::after {
-      transform: translateX(18px);
-      background: var(--gold);
-      box-shadow: 0 0 10px rgba(232,201,135,0.5);
-    }
-
-    /* 收入來源 Modal */
-    .income-modal { max-width: 460px; }
-    .im-header { display: flex; align-items: center; justify-content: space-between; }
-    .im-title { font-size: 17px; font-weight: 700; letter-spacing: 0.03em; }
-    .im-close-btn {
-      appearance: none; border: 0; cursor: pointer;
-      width: 30px; height: 30px; border-radius: 50%;
-      background: rgba(243,241,234,0.05);
-      color: var(--text2); font-size: 13px;
-      box-shadow: inset 0 0 0 1px var(--line);
-      transition: all 0.3s var(--ease);
-    }
-    .im-close-btn:hover { color: var(--text); }
-    .im-divider { height: 1px; background: var(--line); margin: 18px 0 6px; }
-    .income-source-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 2px;
-      border-bottom: 1px solid var(--line);
-    }
-    .isn-name { flex: 1; font-size: 13.5px; font-weight: 600; }
-    .isn-amount { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--pos); }
-    .isn-del {
-      appearance: none; border: 0; cursor: pointer;
-      width: 24px; height: 24px; border-radius: 50%;
-      background: transparent; color: var(--text2); font-size: 15px;
-      transition: all 0.3s var(--ease);
-    }
-    .isn-del:hover { color: var(--neg); background: rgba(255,122,112,0.1); }
-    .isn-empty { padding: 22px 0; text-align: center; font-size: 12.5px; color: var(--text2); }
-    .im-add-row {
-      display: grid; grid-template-columns: 1fr 110px auto;
-      gap: 9px; margin-top: 16px;
-    }
-    .im-add-btn {
-      appearance: none; border: 0; cursor: pointer;
-      font-family: var(--font-sans);
-      padding: 10px 18px; border-radius: 11px;
-      background: linear-gradient(180deg, #f0d69c, var(--gold) 45%, var(--gold-2));
-      color: #191307; font-size: 13px; font-weight: 700;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-      transition: transform 0.4s var(--ease-spring), box-shadow 0.4s var(--ease-spring);
-    }
-    .im-add-btn:hover { transform: translateY(-1px); }
-    .im-add-btn:active { transform: scale(0.97); }
-    .im-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-top: 22px;
-    }
-    .im-total { display: flex; align-items: baseline; gap: 10px; }
-    .im-total-label { font-size: 11px; color: var(--text2); letter-spacing: 0.14em; text-transform: uppercase; }
-    .im-total-value {
-      font-family: var(--font-display);
-      font-size: 21px; color: var(--gold); letter-spacing: 0.03em;
-    }
-    .im-close-text {
-      appearance: none; border: 0; cursor: pointer;
-      background: rgba(243,241,234,0.04);
-      color: var(--text2);
-      padding: 9px 20px; border-radius: 999px;
-      font-family: var(--font-sans); font-size: 12.5px; font-weight: 600;
-      box-shadow: inset 0 0 0 1px var(--line-strong);
-      transition: all 0.3s var(--ease);
-    }
-    .im-close-text:hover { color: var(--text); }
-
-    /* ── Toast ────────────────────────────────────────────── */
-    #toast {
-      position: fixed; bottom: 30px; left: 50%;
-      transform: translate(-50%, 16px);
-      z-index: 200;
-      padding: 13px 24px;
-      border-radius: 999px;
-      background: rgba(23,23,27,0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 0 0 1px var(--line-strong), 0 20px 40px -16px rgba(0,0,0,0.8);
-      border: 1px solid var(--pos);
-      font-size: 13px; font-weight: 600; letter-spacing: 0.03em;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.4s var(--ease), transform 0.5s var(--ease-spring);
-    }
-    #toast.show { opacity: 1; transform: translate(-50%, 0); }
-
-    /* ── 財務自由試算(P4)──────────────────────────────── */
-    .forecast-passive-row {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      padding: 18px 0 20px;
-      margin-bottom: 4px;
-      border-top: 1px solid var(--line);
-    }
-    .field-hint {
-      font-size: 10.5px; color: var(--text2); line-height: 1.5;
-      opacity: 0.85;
-    }
-    .fire-card {
+    .card__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card__scrim { position: absolute; inset: 0; pointer-events: none;
       background:
-        radial-gradient(110% 150% at 92% -30%, rgba(232,201,135,0.1), transparent 55%),
-        var(--card-bg);
+        linear-gradient(to top, rgba(8,10,18,0.84) 0%, rgba(8,10,18,0.36) 32%, rgba(8,10,18,0) 58%),
+        linear-gradient(to bottom, rgba(8,10,18,0.34) 0%, rgba(8,10,18,0) 22%); }
+    .card__face::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+      background: linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 30%, rgba(0,0,0,0.22) 100%);
+      opacity: var(--sheen, 0.5); mix-blend-mode: soft-light;
     }
-    .fire-milestones {
-      display: grid; grid-template-columns: 1fr 1.2fr 1fr;
-      gap: 12px; margin-top: 16px;
-    }
-    .fire-milestone {
-      padding: 16px 18px;
-      border-radius: 13px;
-      background: rgba(243,241,234,0.03);
-      box-shadow: inset 0 0 0 1px var(--line);
-    }
-    .fire-milestone--hero {
-      background: var(--gold-soft);
-      box-shadow: inset 0 0 0 1px rgba(232,201,135,0.3);
-    }
-    .fm-label {
-      font-size: 10px; font-weight: 600; color: var(--text2);
-      letter-spacing: 0.16em; text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-    .fm-value {
-      font-size: 21px; font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      overflow-wrap: anywhere;
-    }
-    .fire-milestone--hero .fm-value { color: var(--gold); font-size: 22px; }
-    .fm-sub { margin-top: 6px; font-size: 10.5px; color: var(--text2); }
+    .card__body { position: absolute; inset: 0; z-index: 2; padding: clamp(18px, 2.4vw, 30px);
+      display: flex; flex-direction: column; justify-content: space-between; color: #fff; }
+    .card__top { display: flex; align-items: center; justify-content: space-between; }
+    .card__idx { font: 700 11px/1 var(--font-mono); letter-spacing: 0.12em;
+      padding: 5px 9px; border-radius: 8px; color: #fff;
+      background: rgba(8,10,14,0.52); border: 1px solid rgba(255,255,255,0.24); }
+    .card__tag { font: 600 10.5px/1 var(--font-mono);
+      letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.85); }
+    .card__kicker { margin: 0 0 7px; font: 600 11px/1.5 var(--font-mono);
+      letter-spacing: 0.14em; color: #ffd9a0; }
+    .card__title { margin: 0; font-family: var(--font-sans); font-weight: 900;
+      font-size: clamp(28px, 3.4vw, 44px); letter-spacing: 0.03em; line-height: 1.1;
+      text-shadow: 0 1px 20px rgba(0,0,0,0.25); }
+    .card__meta { margin: 10px 0 0; font-size: 12.5px; line-height: 1.7; color: rgba(255,255,255,0.78); max-width: 34ch; }
 
-    /* ── RWD ─────────────────────────────────────────────── */
-    @media (max-width: 1080px) {
-      .dash-metrics { grid-template-columns: repeat(6, 1fr); }
-      .dash-metrics > .dash-card:nth-child(1) { grid-column: span 6; }
-      .dash-metrics > .dash-card:nth-child(2) { grid-column: span 2; }
-      .dash-metrics > .dash-card:nth-child(3) { grid-column: span 2; }
-      .dash-metrics > .dash-card:nth-child(4) { grid-column: span 2; }
-      .alloc-unified-body { grid-template-columns: 1fr; gap: 24px; }
-      .doughnut-wrap { max-width: 260px; }
-      .exp-main-grid { grid-template-columns: 1fr; }
-      .summary-row, .forecast-summary-row, .income-metrics-row { grid-template-columns: repeat(2, 1fr); }
-      .flu-grid { grid-template-columns: repeat(2, 1fr); }
-      .exp-quick-row { grid-template-columns: 1fr 1fr; }
-      .exp-quick-row .field:nth-child(3) { grid-column: 1 / -1; }
-      .alloc-cat-row { grid-template-columns: 120px 1fr 96px; }
-      .alloc-pct-info { display: none; }
-      .forecast-top-row { grid-template-columns: 1fr; }
-      .forecast-passive-row { grid-template-columns: 1fr; gap: 14px; }
-      .fire-milestones { grid-template-columns: 1fr; }
+    /* 釘住的 hero(左欄) */
+    .hero { position: absolute; left: clamp(24px, 6vw, 92px); top: 50%; transform: translateY(-50%);
+      z-index: 5; width: min(44vw, 500px); display: flex; flex-direction: column; align-items: flex-start; }
+    .hero__eyebrow { display: inline-flex; align-items: center; gap: 9px;
+      font: 600 11px/1 var(--font-mono); letter-spacing: 0.22em; text-transform: uppercase;
+      color: #ffd9a0; margin-bottom: clamp(16px, 2.4vw, 26px);
+      padding: 9px 17px; border-radius: 999px;
+      background: var(--sun-fill);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 0 0 1px var(--sun-line); }
+    .hero__eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%;
+      background: #ffb14d; box-shadow: 0 0 10px rgba(255,177,77,0.65); }
+    .hero__title { margin: 0; font-family: var(--font-sans); font-weight: 900;
+      font-size: clamp(46px, 7vw, 108px); line-height: 1.08; letter-spacing: 0.01em;
+      background: linear-gradient(100deg, #fdba74, #facc15 45%, #fcd34d 85%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero__title em { font-style: normal;
+      background: linear-gradient(100deg, #fde047, #fb923c 50%, #f87171 92%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      animation: gradShift 8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+      animation-delay: -2.5s; }
+    @keyframes gradShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-
-    @media (max-width: 768px) {
-      main { padding: 108px 14px 70px; }
-      .island-nav { top: 10px; gap: 3px; padding: 6px; width: calc(100vw - 20px); justify-content: space-between; }
-      .logo { padding: 6px 6px; }
-      .logo .logo-text { display: none; }
-      .total-badge { display: none; }
-      .nav-sep { display: none; }
-      .island-nav .tab { padding: 8px 12px; font-size: 12.5px; flex: 1; text-align: center; }
-      .btn-clear-all .clear-text { display: none; }
-      .btn-clear-all { padding: 8px 10px; }
-      .dash-metrics { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .dash-metrics > .dash-card { grid-column: span 2 !important; }
-      .dash-metrics > .dash-card:nth-child(2),
-      .dash-metrics > .dash-card:nth-child(3) { grid-column: span 1 !important; }
-      .kpi-hero .dash-value { font-size: 38px; }
-      .section-title { font-size: 21px; }
-      .section-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .summary-row, .forecast-summary-row, .income-metrics-row { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .flu-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .exp-quick-row { grid-template-columns: 1fr 1fr; }
-      .form-grid, .dca-fields { grid-template-columns: 1fr; }
-      .target-editor-grid { grid-template-columns: 1fr; }
-      .modal { padding: 22px 18px; }
-      .card { padding: 18px 16px; }
-      .exp-item { grid-template-columns: 70px 1fr 92px 26px; }
-      .exp-item-date { display: none; }
-      .im-add-row { grid-template-columns: 1fr; }
-      .alloc-cat-row { grid-template-columns: 96px 1fr; }
-      .alloc-badge { display: none; }
+    .hero__sub { margin: clamp(18px, 2.4vw, 28px) 0 0; max-width: 32ch;
+      font-size: clamp(15px, 1.3vw, 18px); line-height: 1.85; color: rgba(255,237,213,0.9); }
+    .hero .cta { margin-top: clamp(24px, 3vw, 38px); }
+    .hero__hint { margin-top: clamp(18px, 2.4vw, 28px);
+      font: 600 11px/1 var(--font-mono); letter-spacing: 0.2em; color: var(--text2);
+      animation: hintPulse 2.8s var(--ease) infinite; }
+    @keyframes hintPulse {
+      0%, 100% { opacity: 0.5; transform: translateY(0); }
+      50%      { opacity: 1;   transform: translateY(4px); }
     }
 
+    /* 主 CTA:button-in-button 膠囊 */
+    .cta {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 9px 9px 9px 26px; border: 0; border-radius: 999px; cursor: pointer;
+      font-family: var(--font-sans); font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+      color: var(--cta-ink); background: var(--cta-face); text-decoration: none;
+      box-shadow: 0 14px 34px -14px rgba(249,130,30,0.55), inset 0 1px 0 rgba(255,255,255,0.5);
+      transition: transform 0.55s var(--ease-spring), box-shadow 0.55s var(--ease);
+    }
+    .cta:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 20px 44px -16px rgba(249,130,30,0.7), inset 0 1px 0 rgba(255,255,255,0.5); }
+    .cta:active { transform: scale(0.98); }
+    .cta:focus-visible { outline: 2px solid #ffb14d; outline-offset: 3px; }
+    .cta__ico { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
+      background: var(--cta-ico-bg); transition: transform 0.55s var(--ease-spring); }
+    .cta:hover .cta__ico { transform: translateX(3px) translateY(-1px) scale(1.05); }
+    .cta__ico svg { width: 14px; height: 14px; }
+
+    /* hero 進場:淡入上移(僅 transform+opacity) */
+    .hero > * { opacity: 0; transform: translateY(28px); animation: rise 1s var(--ease) forwards; }
+    .hero > *:nth-child(1) { animation-delay: 0.05s; }
+    .hero > *:nth-child(2) { animation-delay: 0.16s; }
+    .hero > *:nth-child(3) { animation-delay: 0.28s; }
+    .hero > *:nth-child(4) { animation-delay: 0.42s; }
+    .hero > *:nth-child(5) { animation-delay: 0.56s; }
+    /* 標題同時要進場(rise)與金漸層流動(gradShift):合併宣告,特異性高於 .hero > * */
+    .hero .hero__title { animation: rise 1s var(--ease) 0.16s both,
+                                    gradShift 8s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+    /* 進度軌(右緣) */
+    .rail { position: absolute; right: clamp(20px, 3.4vw, 56px); top: 50%; transform: translateY(-50%);
+      z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 16px; user-select: none; }
+    .rail__count { display: flex; align-items: baseline; gap: 3px; line-height: 1; }
+    .rail__cur { font-family: var(--font-display); font-size: clamp(28px, 3.2vw, 42px);
+      color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+    .rail__tot { font-family: var(--font-display); font-size: clamp(13px, 1.2vw, 16px); color: var(--text2); }
+    .rail__track { position: relative; width: 22px; height: clamp(200px, 40vh, 400px); cursor: pointer; touch-action: none; }
+    .rail__track::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px;
+      transform: translateX(-50%); background: var(--line-strong); border-radius: 2px; }
+    .rail__fill { position: absolute; top: 0; left: 50%; width: 2px; height: 0; transform: translateX(-50%);
+      border-radius: 2px; background: linear-gradient(var(--gold), color-mix(in srgb, var(--gold) 35%, transparent));
+      box-shadow: 0 0 12px color-mix(in srgb, var(--gold) 55%, transparent); }
+    .rail__thumb { position: absolute; left: 50%; top: 0; width: 11px; height: 11px;
+      margin: -5.5px 0 0 -5.5px; border-radius: 50%; background: var(--gold);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold) 20%, transparent),
+                  0 0 16px color-mix(in srgb, var(--gold) 85%, transparent); }
+    .rail__tick { position: absolute; left: 50%; width: 18px; height: 18px; transform: translate(-50%, -50%);
+      padding: 0; border: 0; background: transparent; cursor: pointer; }
+    .rail__tick::before { content: ""; position: absolute; left: 50%; top: 50%; width: 5px; height: 5px;
+      transform: translate(-50%, -50%); border-radius: 50%; background: var(--line-strong);
+      transition: background 0.3s var(--ease), transform 0.3s var(--ease); }
+    .rail__tick:hover::before { background: var(--gold); transform: translate(-50%, -50%) scale(1.3); }
+    .rail__tick[aria-current="true"]::before { opacity: 0; }
+    .rail__tick:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 50%; }
+    .rail__label { font-weight: 700; font-size: 12px; letter-spacing: 0.14em;
+      color: var(--text); opacity: 0.75; writing-mode: vertical-rl; }
+
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    /* ═══ 出發區(cascade 釋放後)═══ */
+    .launch { position: relative; padding: clamp(110px, 16vh, 190px) 20px clamp(60px, 8vh, 100px);
+      max-width: 1140px; margin: 0 auto; }
+    .launch-shell { border-radius: 36px; padding: 12px;
+      background: var(--glass-shell); box-shadow: 0 0 0 1px var(--glass-ring); }
+    .launch-core { border-radius: 26px;
+      background: linear-gradient(170deg, rgba(255,255,255,0.07) 0%, rgba(13,10,6,0.5) 45%, rgba(249,150,50,0.07) 100%);
+      box-shadow: 0 0 0 1px var(--sun-line), inset 0 1px 0 rgba(255,255,255,0.14), var(--card-depth);
+      padding: clamp(46px, 7vw, 84px) clamp(22px, 6vw, 80px); text-align: center; }
+    .launch-eyebrow { display: inline-flex; align-items: center;
+      padding: 7px 15px; border-radius: 999px;
+      font: 600 10px/1 var(--font-mono); letter-spacing: 0.22em; text-transform: uppercase;
+      color: #ffd9a0; background: var(--sun-fill);
+      box-shadow: inset 0 0 0 1px var(--sun-line); }
+    .launch h2 { margin: 24px 0 14px; font-weight: 900;
+      font-size: clamp(30px, 4.4vw, 52px); letter-spacing: 0.015em; line-height: 1.25; }
+    .launch h2 em { font-style: normal;
+      background: linear-gradient(100deg, #fde047, #fb923c 50%, #f87171 92%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .launch-sub { color: rgba(255,237,213,0.72); font-size: clamp(14px, 1.2vw, 16px); line-height: 1.8; }
+    .launch-chips { margin: clamp(36px, 5vw, 52px) auto 0;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 800px; }
+    .chip { border-radius: 20px; padding: 8px; background: var(--glass-shell);
+      box-shadow: 0 0 0 1px var(--glass-ring); text-align: left; }
+    .chip-core { height: 100%; border-radius: 13px;
+      background: linear-gradient(165deg, rgba(255,255,255,0.09) 0%, rgba(14,11,7,0.42) 52%, rgba(249,150,50,0.08) 100%);
+      box-shadow: 0 0 0 1px var(--sun-line), inset 0 1px 0 rgba(255,255,255,0.16);
+      padding: 20px 18px 22px; }
+    .chip-tag { font: 700 10px/1 var(--font-mono); letter-spacing: 0.2em;
+      text-transform: uppercase; color: #ffc46b; }
+    .chip-name { margin-top: 11px; font-weight: 700; font-size: 15.5px; letter-spacing: 0.01em; }
+    .chip-desc { margin-top: 6px; font-size: 12.5px; color: var(--text2); line-height: 1.65; }
+    .launch .cta { margin-top: clamp(38px, 5vw, 54px); }
+    .launch-alt { margin-top: 20px; font: 500 11.5px/1.6 var(--font-mono);
+      letter-spacing: 0.06em; color: var(--text2); }
+    .launch-alt span { border-bottom: 1px dashed var(--line-strong); padding-bottom: 2px; }
+
+    /* ═══ 帶狀區塊共用(實體現場/學員見證)═══ */
+    .band { position: relative; max-width: 1140px; margin: 0 auto;
+      padding: clamp(84px, 11vh, 140px) 20px 0; }
+    .band-eyebrow { display: inline-flex; align-items: center; gap: 9px;
+      font: 600 11px/1 var(--font-mono); letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text2); }
+    .band-eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--gold); box-shadow: 0 0 10px var(--gold-soft); }
+    .band-title { margin: 14px 0 0; font-weight: 900;
+      font-size: clamp(26px, 3.6vw, 40px); letter-spacing: 0.02em; line-height: 1.3; }
+    .band-note { margin: 12px 0 0; font-size: 12.5px; line-height: 1.9; color: var(--text2); }
+
+    /* 學員見證 */
+    .voice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+      margin-top: clamp(28px, 4vw, 44px); }
+    .voice { margin: 0; border-radius: 22px; padding: 8px;
+      background: var(--glass-shell); box-shadow: 0 0 0 1px var(--glass-ring); }
+    .voice-core { height: 100%; display: flex; flex-direction: column;
+      border-radius: 15px;
+      background: linear-gradient(170deg, rgba(255,255,255,0.08) 0%, rgba(14,11,7,0.45) 55%, rgba(249,150,50,0.06) 100%);
+      box-shadow: 0 0 0 1px var(--sun-line), inset 0 1px 0 rgba(255,255,255,0.14);
+      padding: 24px 22px 20px; }
+    .voice-quote { font-family: Georgia, 'Times New Roman', serif;
+      font-size: 30px; line-height: 0.6; color: #ffb14d; }
+    .voice-core blockquote { margin: 14px 0 0; flex: 1;
+      font-size: 13.5px; line-height: 1.95; color: var(--text); }
+    .voice-core figcaption { margin-top: 18px; padding-top: 14px;
+      border-top: 1px solid var(--line);
+      display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+    .voice-name { font-weight: 700; font-size: 14px; letter-spacing: 0.04em; }
+    .voice-src { font: 500 10.5px/1 var(--font-mono); letter-spacing: 0.14em;
+      color: var(--text2); white-space: nowrap; }
+    .voice.reveal:nth-child(2) { transition-delay: 0.1s; }
+    .voice.reveal:nth-child(3) { transition-delay: 0.2s; }
+
+    /* 捲動進場 */
+    .reveal { opacity: 0; transform: translateY(34px);
+      transition: opacity 1s var(--ease), transform 1s var(--ease); }
+    .reveal.in { opacity: 1; transform: none; }
+    .chip.reveal:nth-child(2) { transition-delay: 0.1s; }
+    .chip.reveal:nth-child(3) { transition-delay: 0.2s; }
+
+    footer { padding: 10px 20px 46px; text-align: center; }
+    .foot-line { font: 500 11px/2 var(--font-mono); letter-spacing: 0.08em; color: var(--text2); }
+
+    /* ═══ 窄幅/直式 ═══ */
+    @media (max-width: 880px) {
+      .hero { position: absolute; top: clamp(84px, 13vw, 120px); left: 0; right: 0; width: auto; transform: none;
+        align-items: center; text-align: center; padding: 0 24px; }
+      .hero__sub, .hero__hint { display: none; }
+      .hero__title { font-size: clamp(40px, 12.5vw, 76px); }
+      .hero .cta { margin-top: 20px; }
+      .rail { right: clamp(10px, 3vw, 18px); top: 74%; }
+      .rail__track { height: clamp(140px, 28vh, 260px); }
+      .rail__label { display: none; }
+      .launch-chips { grid-template-columns: 1fr; }
+      .voice-grid { grid-template-columns: 1fr; }
+    }
     @media (max-width: 560px) {
-      .summary-row, .forecast-summary-row, .income-metrics-row { grid-template-columns: 1fr 1fr; }
-      .dash-metrics > .dash-card:nth-child(2),
-      .dash-metrics > .dash-card:nth-child(3) { grid-column: span 2 !important; }
+      .island-nav { gap: 5px; padding: 6px; }
+      .logo { padding: 7px 8px 7px 7px; font-size: 13px; }
+      .nav-cta { font-size: 12px; padding: 6px 5px 6px 13px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-      .page.active > * { opacity: 1; animation: none; }
+      .hero > *, .reveal, .hero__hint { animation: none !important; transition: none !important;
+        opacity: 1 !important; transform: none !important; }
+      html { scroll-behavior: auto; }
     }
   </style>
 </head>
 <body>
 
+<canvas id="fx" aria-hidden="true"></canvas>
 <div class="bg-orbs"></div>
 <div class="bg-grain"></div>
 
-<!-- ── 浮島導覽 ── -->
 <nav class="island-nav">
-  <div class="logo">
+  <a class="logo" href="./" title="登月學院">
     <span class="logo-moon">
       <svg viewBox="0 0 24 24" fill="none">
         <path d="M20 13.2A8.2 8.2 0 0 1 10.8 4a8.2 8.2 0 1 0 9.2 9.2Z" fill="#191307"/>
       </svg>
     </span>
-    <span class="logo-text">資產追蹤</span>
-  </div>
+    <span class="logo-text">登月學院</span>
+  </a>
   <span class="nav-sep"></span>
-  <button class="tab active" data-page="dashboard">總覽</button>
-  <button class="tab" data-page="expenses">收支</button>
-  <button class="tab" data-page="forecast">預測</button>
-  <span class="nav-sep"></span>
-  <div class="total-badge">總資產<span id="header-total">—</span></div>
-  <button class="btn-theme" id="btn-theme" title="切換深／淺色主題">
-    <svg class="icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-    <svg class="icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-  </button>
-  <button class="btn-clear-all" id="btn-clear-all" title="清空所有資料">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-    </svg>
-    <span class="clear-text">清空</span>
-  </button>
+  <a class="nav-cta" href="./app.html">進入終端
+    <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+  </a>
 </nav>
 
-<!-- ── Main ── -->
-<main>
+<!-- ═════ 品牌導覽:捲動卡片瀑布 ═════ -->
+<section id="cascade" aria-roledescription="carousel" aria-label="登月品牌導覽卡片組">
+ <div class="sticky">
+  <div id="stage">
+    <div id="deck"><!-- 卡片由 CONFIG.cards 注入 --></div>
+  </div>
 
-  <!-- ═════ Page 1:總覽(儀表板 + 資產明細)═════ -->
-  <section class="page active" id="page-dashboard">
+  <div class="hero">
+    <span class="hero__eyebrow">Moonlit · 登月學院導覽</span>
+    <!-- hero 標語為草稿,待定稿 -->
+    <h1 class="hero__title">從月光<br><em>到登月</em></h1>
+    <p class="hero__sub">六個章節,認識登月的起點、使命與引路人——然後打開資產終端,算出你與財務自由的距離。</p>
+    <a class="cta" href="./app.html">
+      <span>進入資產終端</span>
+      <span class="cta__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+    </a>
+    <span class="hero__hint">↓ 往下捲動 · 開始導覽</span>
+  </div>
 
-    <div class="section-header">
-      <div>
-        <span class="eyebrow">Portfolio Overview</span>
-        <div class="section-title">資產總覽<small id="dash-date"></small></div>
-      </div>
-      <button class="btn btn-ghost btn-sm" id="btn-export-csv">↓ 匯出 CSV</button>
+  <div class="rail">
+    <div class="rail__count"><span class="rail__cur" id="railCur">01</span><span class="rail__tot" id="railTot"></span></div>
+    <div class="rail__track" id="railTrack" role="tablist" aria-label="跳至章節">
+      <div class="rail__fill" id="railFill"></div>
+      <div class="rail__thumb" id="railThumb"></div>
     </div>
+    <div class="rail__label" id="railLabel"></div>
+  </div>
 
-    <!-- KPI Bento -->
-    <div class="dash-metrics">
-      <div class="dash-card kpi-hero">
-        <div class="dash-label">總資產 · Net Worth</div>
-        <div class="dash-value" id="dm-total">—</div>
-        <div class="dash-sub" id="dm-total-sub"></div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-label">最大持倉</div>
-        <div class="dash-value dash-value--name" id="dm-top-name">—</div>
-        <div class="dash-sub" id="dm-top-val"></div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-label">資產種類</div>
-        <div class="dash-value" id="dm-cats">—</div>
-        <div class="dash-sub" id="dm-cats-sub"></div>
-      </div>
-      <div class="dash-card" id="dm-exp-card">
-        <div class="dash-label">
-          本月開銷
-          <button class="icon-btn" id="btn-exp-breakdown" title="收支明細">≡</button>
-        </div>
-        <div class="dash-value" id="dm-exp">—</div>
-        <div class="dash-sub" id="dm-exp-sub">預算使用率</div>
-        <div class="exp-popover" id="exp-breakdown-popover">
-          <div class="exp-popover-row">
-            <span class="epr-label">月收入</span>
-            <span class="epr-val" id="epop-income">—</span>
-          </div>
-          <div class="exp-popover-row">
-            <span class="epr-label">− 定期定額</span>
-            <span class="epr-val" id="epop-dca">—</span>
-          </div>
-          <div class="exp-popover-row">
-            <span class="epr-label">− 本月開銷</span>
-            <span class="epr-val" id="epop-exp">—</span>
-          </div>
-          <div class="exp-popover-row epr-result">
-            <span class="epr-label">可用餘額</span>
-            <span class="epr-val" id="epop-balance">—</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="sr" id="live" aria-live="polite"></div>
+ </div>
+</section>
 
-    <!-- 資產配置 -->
-    <div class="shell">
-      <div class="card alloc-unified-card">
-        <div class="alloc-unified-header">
-          <div class="card-title">資產配置佔比<span class="card-sub">實際 vs 目標</span></div>
-          <button class="btn btn-ghost btn-sm" id="btn-edit-targets">設定目標</button>
-        </div>
-        <div class="alloc-unified-body">
-          <div class="alloc-doughnut-col">
-            <div class="doughnut-wrap">
-              <canvas id="chart-doughnut"></canvas>
-            </div>
-            <div id="doughnut-empty" class="empty-state" style="display:none">
-              <p>尚無資產資料</p>
-            </div>
-          </div>
-          <div class="alloc-list-col" id="alloc-list">
-            <div class="empty-state"><p>尚無資產資料</p></div>
-          </div>
-        </div>
+<!-- ═════ 學員見證(文字節錄自 consult-site 公開見證原文,可再抽換)═════ -->
+<section class="band voices" aria-label="學員見證">
+  <div class="reveal">
+    <span class="band-eyebrow">Voices · 學員怎麼說</span>
+    <h2 class="band-title">走過的人,怎麼說。</h2>
+    <p class="band-note">以下節錄自學員回饋(私訊與問卷原文,僅做刪節不改寫)<br>——呈現的是學習體驗,不是收益保證。</p>
+  </div>
+  <div class="voice-grid">
+    <figure class="voice reveal">
+      <div class="voice-core">
+        <span class="voice-quote" aria-hidden="true">“</span>
+        <blockquote>覺得自己如果沒有任何知識跟整個投資心態架構沒建立好,肯定會滿手是血,畢竟存款都不會是憑空而降的,聽專業的成功人士實體教學真的收穫很多。</blockquote>
+        <figcaption><span class="voice-name">吳○萍</span><span class="voice-src">課後心得回饋</span></figcaption>
       </div>
-    </div>
+    </figure>
+    <figure class="voice reveal">
+      <div class="voice-core">
+        <span class="voice-quote" aria-hidden="true">“</span>
+        <blockquote>課前準備課程,課後檢核表也給我不得不完成的壓力,讓我們克服自己的惰性……真的是保姆級的帶領。</blockquote>
+        <figcaption><span class="voice-name">曾○舒</span><span class="voice-src">課後心得回饋</span></figcaption>
+      </div>
+    </figure>
+    <figure class="voice reveal">
+      <div class="voice-core">
+        <span class="voice-quote" aria-hidden="true">“</span>
+        <blockquote>能夠這麼系統化的學習加密貨幣知識真的非常值得,一開始的基礎知識建立,對於新手來說超級重要,避掉不必要的坑降低很多操作上的風險。</blockquote>
+        <figcaption><span class="voice-name">廖○廷</span><span class="voice-src">LINE 學員群課後心得</span></figcaption>
+      </div>
+    </figure>
+  </div>
+</section>
 
-    <!-- 持倉明細(完整表格+管理)-->
-    <div class="shell">
-      <div class="card">
-        <div class="alloc-unified-header">
-          <div class="card-title">
-            持倉明細
-            <span class="card-sub">總市值 <span id="sum-market">$0</span> · <span id="sum-count">共 0 筆資產</span></span>
-          </div>
-          <button class="btn btn-primary btn-sm" id="btn-add-asset"><span class="btn-orb">＋</span>新增資產</button>
-        </div>
-
-        <div class="filter-bar" id="filter-bar">
-          <button class="filter-chip active" data-cat="all">全部</button>
-        </div>
-
-        <!-- DCA 摘要條(有啟用定期定額才顯示)-->
-        <div class="dca-summary-strip" id="dca-summary-row" style="display:none">
-          <span>每月固定投入<b id="dca-monthly-total">$0</b></span>
-          <span>每季合計<b id="dca-quarterly-total">$0</b></span>
-          <span>啟用定期定額<b id="dca-enabled-count">0</b></span>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>資產名稱</th>
-                <th>類別</th>
-                <th>市值（TWD）</th>
-                <th>佔比%</th>
-                <th>更新日期</th>
-                <th>定期定額</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody id="asset-tbody">
-              <tr id="asset-empty">
-                <td colspan="7">
-                  <div class="empty-state">
-                    <div class="icon">◐</div>
-                    <p>尚無資產，開始建立你的投資組合</p>
-                    <div class="empty-actions">
-                      <button class="btn btn-primary btn-sm" onclick="openModal()">＋ 新增第一筆資產</button>
-                      <button class="btn btn-ghost btn-sm" id="btn-load-demo">載入示範資料</button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot id="asset-tfoot"></tfoot>
-          </table>
-        </div>
+<!-- ═════ 出發區 ═════ -->
+<section class="launch">
+  <div class="launch-shell reveal">
+    <div class="launch-core">
+      <span class="launch-eyebrow">Ready to Launch · 準備出發</span>
+      <h2>你的資產,值得<em>一座終端</em></h2>
+      <p class="launch-sub">免費使用、無需註冊——所有資料只儲存在你自己的瀏覽器。</p>
+      <div class="launch-chips">
+        <div class="chip reveal"><div class="chip-core">
+          <div class="chip-tag">Overview</div>
+          <div class="chip-name">資產配置總覽</div>
+          <div class="chip-desc">持倉、占比與目標配置,一眼看清全貌。</div>
+        </div></div>
+        <div class="chip reveal"><div class="chip-core">
+          <div class="chip-tag">Cashflow</div>
+          <div class="chip-name">收支與現金流</div>
+          <div class="chip-desc">記帳、月度結餘與收入分配追蹤。</div>
+        </div></div>
+        <div class="chip reveal"><div class="chip-core">
+          <div class="chip-tag">FIRE</div>
+          <div class="chip-name">複利與自由試算</div>
+          <div class="chip-desc">算出被動收入蓋過支出的那一年。</div>
+        </div></div>
       </div>
-    </div>
-
-  </section>
-
-  <!-- ═════ Page 2:收支 ═════ -->
-  <section class="page" id="page-expenses">
-
-    <div class="section-header">
-      <div>
-        <span class="eyebrow">Cash Flow</span>
-        <div class="section-title">收支管理<small>月收入分配與每日支出追蹤</small></div>
-      </div>
-    </div>
-
-    <!-- 4 Metric Cards -->
-    <div class="income-metrics-row">
-      <div class="income-metric-card">
-        <div class="imc-label">
-          月收入
-          <button class="btn btn-ghost btn-sm" id="btn-set-income" style="padding:3px 10px;font-size:11px;">設定</button>
-        </div>
-        <div class="imc-value" id="imc-income">$0</div>
-        <div class="imc-sub" id="imc-income-note">未設定來源</div>
-      </div>
-      <div class="income-metric-card">
-        <div class="imc-label">定期定額</div>
-        <div class="imc-value" id="imc-dca">$0</div>
-        <div class="imc-sub" id="imc-dca-sub">自動計算</div>
-      </div>
-      <div class="income-metric-card">
-        <div class="imc-label">可用餘額</div>
-        <div class="imc-value" id="imc-balance">$0</div>
-        <div class="imc-sub" id="imc-balance-sub">收入 − 定額 − 開銷</div>
-      </div>
-      <div class="income-metric-card">
-        <div class="imc-label">本月開銷</div>
-        <div class="imc-value negative" id="exp-month-total">$0</div>
-        <div class="imc-sub" id="exp-month-count">共 0 筆</div>
-      </div>
-    </div>
-
-    <!-- 收入分配流向 -->
-    <div class="income-alloc-wrap">
-      <div class="income-alloc-title">
-        月收入分配流向
-        <span id="income-alloc-no-income" style="font-size:11px;font-weight:400;color:var(--text2)">（請先設定月收入）</span>
-      </div>
-      <div class="income-alloc-bar" id="income-alloc-bar">
-        <div class="income-alloc-segment" id="ias-dca"     style="background:#e8c987;width:0%"></div>
-        <div class="income-alloc-segment" id="ias-expense" style="background:#ff7a70;width:0%"></div>
-        <div class="income-alloc-segment" id="ias-balance" style="background:#3ddc97;width:0%"></div>
-      </div>
-      <div class="income-alloc-labels">
-        <div class="income-alloc-label-item">
-          <span class="ial-dot" style="background:#e8c987"></span>
-          <span class="ial-name">定期定額</span>
-          <span class="ial-val" id="ial-dca-val">—</span>
-          <span class="ial-pct" id="ial-dca-pct"></span>
-        </div>
-        <div class="income-alloc-label-item">
-          <span class="ial-dot" style="background:#ff7a70"></span>
-          <span class="ial-name">本月開銷</span>
-          <span class="ial-val" id="ial-exp-val">—</span>
-          <span class="ial-pct" id="ial-exp-pct"></span>
-        </div>
-        <div class="income-alloc-label-item">
-          <span class="ial-dot" style="background:#3ddc97"></span>
-          <span class="ial-name">可用餘額</span>
-          <span class="ial-val" id="ial-bal-val">—</span>
-          <span class="ial-pct" id="ial-bal-pct"></span>
-        </div>
-      </div>
-      <div class="income-alloc-overflow" id="income-alloc-overflow">
-        ⚠ 定期定額 + 本月開銷已超過月收入，請留意資金缺口
-      </div>
-    </div>
-
-    <!-- 快速記帳 -->
-    <div class="exp-quick-panel">
-      <div class="exp-quick-title">快速記帳</div>
-      <div class="exp-quick-row">
-        <div class="field field-sm">
-          <label>金額（TWD）</label>
-          <input type="number" id="eq-amount" placeholder="0" min="1" step="1" />
-        </div>
-        <div class="field field-sm">
-          <label>類別</label>
-          <select id="eq-category">
-            <option value="飲食">飲食</option>
-            <option value="交通">交通</option>
-            <option value="娛樂">娛樂</option>
-            <option value="醫療">醫療</option>
-            <option value="購物">購物</option>
-            <option value="帳單">帳單</option>
-            <option value="投資">投資</option>
-            <option value="其他">其他</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>備註（選填）</label>
-          <input type="text" id="eq-note" placeholder="例：午餐、捷運月票…" />
-        </div>
-        <div class="field field-xs">
-          <label>日期</label>
-          <input type="date" id="eq-date" />
-        </div>
-        <div class="field field-btn">
-          <button class="btn btn-primary" id="btn-add-expense"><span class="btn-orb">＋</span>新增</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 開銷列表 + 分佈圖 -->
-    <div class="exp-main-grid">
-      <div>
-        <div class="exp-month-nav">
-          <button class="exp-nav-btn" id="exp-prev-month">&#8249;</button>
-          <span class="exp-month-label" id="exp-month-label">—</span>
-          <button class="exp-nav-btn" id="exp-next-month">&#8250;</button>
-        </div>
-
-        <div class="filter-bar" id="exp-filter-bar" style="margin-bottom:14px;">
-          <button class="filter-chip active" data-cat="all">全部</button>
-        </div>
-
-        <div class="exp-list-card" id="exp-list-card">
-          <div id="exp-list-empty" class="empty-state" style="padding:50px 20px">
-            <div class="icon">✦</div>
-            <p>本月尚無開銷記錄</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="exp-pie-card">
-        <div class="card-title" style="margin-bottom:16px">本月分佈</div>
-        <div id="exp-pie-empty" class="empty-state" style="padding:30px 0; display:none">
-          <p>尚無資料</p>
-        </div>
-        <canvas id="exp-pie-chart"></canvas>
-        <div id="exp-pie-legend" style="margin-top:16px; display:flex; flex-direction:column; gap:9px;"></div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- ═════ Page 3:預測 ═════ -->
-  <section class="page" id="page-forecast">
-
-    <div class="section-header">
-      <div>
-        <span class="eyebrow">Compound Forecast</span>
-        <div class="section-title">未來預測<small>資產複利成長模擬</small></div>
-      </div>
-    </div>
-
-    <!-- 參數卡 -->
-    <div class="card forecast-params">
-      <div class="forecast-top-row">
-        <div>
-          <div class="forecast-field-label">預測年數</div>
-          <div class="forecast-slider-wrap">
-            <input type="range" id="fc-years-slider" class="forecast-slider"
-                   min="1" max="30" value="10" step="1" />
-            <div class="forecast-slider-val">
-              <span id="fc-years-val">10</span>
-              <span style="font-size:13px;color:var(--text2);font-family:var(--font-sans)"> 年</span>
-            </div>
-          </div>
-          <div class="slider-minmax"><span>1 年</span><span>30 年</span></div>
-        </div>
-        <div style="display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:10px;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span style="font-size:13px;color:var(--text2);white-space:nowrap;">納入通膨</span>
-            <label class="toggle-switch" title="開啟後，儲蓄帳戶、現金、外幣、保險、定存的實質報酬率將扣除 2%">
-              <input type="checkbox" id="fc-inflation-toggle" />
-              <span class="toggle-track"></span>
-            </label>
-          </div>
-          <span class="inflation-badge" id="inflation-badge">通膨調整 −2%/年</span>
-        </div>
-      </div>
-
-      <div class="forecast-passive-row">
-        <div class="field">
-          <label>每月被動收入（自動再投入）</label>
-          <input type="number" id="fc-passive-input" placeholder="例：5000，沒有可留空" min="0" step="500" />
-          <span class="field-hint">你目前每月的額外現金流（股息／租金／版稅／副業）。輸入後會當成每月加碼投入，用整體組合報酬率滾複利；留空＝不計入</span>
-        </div>
-        <div class="field">
-          <label>安全提領率（%/年）</label>
-          <input type="number" id="fc-swr-input" placeholder="4" min="0.5" max="12" step="0.5" />
-          <span class="field-hint">退休後每年可從資產「安全提領」的比例（經典 4% 法則）。資產 × 提領率 ÷ 12 ＝ 月被動收入；設得越低越保守、所需資產越多</span>
-        </div>
-        <div class="field">
-          <label>財務自由目標：月開銷</label>
-          <input type="number" id="fc-target-exp" placeholder="0" min="0" step="1000" />
-          <span class="field-hint" id="fc-target-hint">預設帶入近月平均開銷，可手動調整</span>
-        </div>
-      </div>
-
-      <div id="fc-monthly-hint" style="font-size:11.5px;color:var(--text2);margin-bottom:14px;display:none"></div>
-
-      <div class="forecast-rates-title">各類別預期年報酬率</div>
-      <div class="forecast-rates-grid" id="forecast-rates">
-        <div style="color:var(--text2);font-size:13px">尚無資產，前往「總覽」新增後即可設定</div>
-      </div>
-    </div>
-
-    <!-- 摘要卡 -->
-    <div class="forecast-summary-row">
-      <div class="summary-card">
-        <div class="label"><span id="fc-n-label">10</span> 年後預計總資產</div>
-        <div class="value" id="fc-final">—</div>
-        <div class="sub">基準情境</div>
-      </div>
-      <div class="summary-card">
-        <div class="label">期間總投入</div>
-        <div class="value" id="fc-invested">—</div>
-        <div class="sub" id="fc-invested-sub">現有資產 + 定投累計</div>
-      </div>
-      <div class="summary-card">
-        <div class="label">屆時每月被動收入</div>
-        <div class="value" id="fc-passive-final">—</div>
-        <div class="sub" id="fc-passive-final-sub">以提領率換算</div>
-      </div>
-      <div class="summary-card">
-        <div class="label">年化報酬率（CAGR）</div>
-        <div class="value" id="fc-cagr">—</div>
-        <div class="sub">基準情境複合年成長率</div>
-      </div>
-    </div>
-
-    <!-- 財務自由試算 FIRE Crossover -->
-    <div class="shell">
-      <div class="card fire-card">
-        <div class="card-title" style="margin-bottom:6px">
-          財務自由試算
-          <span class="card-sub">當被動收入 ≥ 月開銷，工作就變成選擇</span>
-        </div>
-        <div id="fire-empty" class="empty-state" style="display:none; padding:36px 0">
-          <p>設定「財務自由目標：月開銷」後即可試算交叉點</p>
-        </div>
-        <div id="fire-body">
-          <div class="fire-milestones">
-            <div class="fire-milestone">
-              <div class="fm-label">財務自由所需資產</div>
-              <div class="fm-value" id="fire-need">—</div>
-              <div class="fm-sub" id="fire-need-sub">月開銷 × 12 ÷ 提領率</div>
-            </div>
-            <div class="fire-milestone fire-milestone--hero">
-              <div class="fm-label">預計達成時間</div>
-              <div class="fm-value" id="fire-when">—</div>
-              <div class="fm-sub" id="fire-when-sub">依基準情境推算</div>
-            </div>
-            <div class="fire-milestone">
-              <div class="fm-label">屆時每月被動收入</div>
-              <div class="fm-value" id="fire-passive-at">—</div>
-              <div class="fm-sub" id="fire-passive-sub">資產 × 提領率 ÷ 12</div>
-            </div>
-          </div>
-          <div style="position:relative; height:250px; margin-top:18px">
-            <canvas id="fire-chart"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 總資產預測曲線 -->
-    <div class="shell">
-      <div class="card">
-        <div class="card-title" style="margin-bottom:18px">
-          總資產預測曲線
-          <span class="card-sub" id="fc-chart-subtitle">基準情境 · 依各類別設定報酬率</span>
-        </div>
-        <div id="forecast-empty" class="empty-state" style="display:none; padding:60px 0">
-          <div class="icon">◐</div>
-          <p>前往「總覽」新增資產後即可查看預測</p>
-        </div>
-        <div style="position:relative; height:290px">
-          <canvas id="forecast-line-chart"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- 各類別堆疊 -->
-    <div class="card" style="margin-bottom:20px">
-      <div class="card-title" style="margin-bottom:18px">
-        各類別資產預測分布
-        <span class="card-sub">堆疊柱狀圖 · 依類別分色</span>
-      </div>
-      <div style="position:relative; height:300px">
-        <canvas id="forecast-bar-chart"></canvas>
-      </div>
-    </div>
-
-    <!-- 人生單位 -->
-    <div class="forecast-life-units">
-      <div class="flu-header">
-        <div class="flu-title">
-          <span id="flu-years">10</span> 年累積報酬，可以換到
-        </div>
-        <div class="flu-subtitle">以預計總報酬直接換算購買力</div>
-      </div>
-      <div class="flu-grid">
-        <div class="flu-item">
-          <img class="flu-img" src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=80" alt="咖啡" loading="lazy" />
-          <div class="flu-item-body">
-            <div class="flu-number" id="flu-coffee">—</div>
-            <div class="flu-unit">杯咖啡</div>
-            <div class="flu-note">以一杯 50 元計</div>
-          </div>
-        </div>
-        <div class="flu-item">
-          <img class="flu-img" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=300&q=80" alt="大餐" loading="lazy" />
-          <div class="flu-item-body">
-            <div class="flu-number" id="flu-meal">—</div>
-            <div class="flu-unit">頓大餐</div>
-            <div class="flu-note">以一餐 1,000 元計</div>
-          </div>
-        </div>
-        <div class="flu-item">
-          <img class="flu-img" src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=300&q=80" alt="旅行" loading="lazy" />
-          <div class="flu-item-body">
-            <div class="flu-number" id="flu-travel">—</div>
-            <div class="flu-unit">次旅行</div>
-            <div class="flu-note">以一次 5 萬元計</div>
-          </div>
-        </div>
-        <div class="flu-item">
-          <img class="flu-img" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=300&q=80" alt="汽車" loading="lazy" />
-          <div class="flu-item-body">
-            <div class="flu-number" id="flu-car">—</div>
-            <div class="flu-unit">輛汽車</div>
-            <div class="flu-note">以一輛 100 萬元計</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 免責聲明 -->
-    <div class="disclaimer">
-      <ul>
-        <li>本功能僅供資產成長模擬參考，所有預測數據均基於使用者自行設定之報酬率假設，並以複利模型計算，不代表實際投資結果。</li>
-        <li>市場報酬率受總體經濟、市場波動等因素影響，實際績效可能與模擬結果有顯著差異，本工具不構成任何投資建議或要約，投資人應自行判斷並承擔投資風險。</li>
-      </ul>
-    </div>
-
-  </section>
-
-</main>
-
-<!-- ═════ Modal:新增 / 編輯資產 ═════ -->
-<div class="modal-overlay" id="asset-modal">
-  <div class="modal">
-    <button class="modal-close" id="modal-close">✕</button>
-    <div class="modal-title" id="modal-title">新增資產</div>
-    <div class="form-grid">
-      <div class="field full">
-        <label>資產名稱</label>
-        <input type="text" id="f-name" placeholder="例：元大台灣50、BTC、台新帳戶" />
-      </div>
-      <div class="field">
-        <label>類別</label>
-        <select id="f-category">
-          <option value="儲蓄帳戶">儲蓄帳戶</option>
-          <option value="台股/ETF">台股／ETF</option>
-          <option value="基金">基金</option>
-          <option value="美股">美股</option>
-          <option value="區塊鏈套利">區塊鏈套利</option>
-          <option value="區塊鏈交易">區塊鏈交易</option>
-          <option value="保險">保險</option>
-          <option value="現金">現金</option>
-          <option value="外幣">外幣</option>
-          <option value="房地產">房地產</option>
-          <option value="貴金屬">貴金屬</option>
-          <option value="定存">定存</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>更新日期</label>
-        <input type="date" id="f-date" />
-      </div>
-      <div class="field">
-        <label>市值（TWD）</label>
-        <input type="number" id="f-market" placeholder="0" min="0" step="1" />
-      </div>
-      <div class="field">
-        <label>成本（TWD）</label>
-        <input type="number" id="f-cost" placeholder="0" min="0" step="1" />
-      </div>
-      <div class="field full">
-        <label>備註（選填）</label>
-        <input type="text" id="f-note" placeholder="選填備註" />
-      </div>
-      <div class="field full">
-        <div class="dca-section" id="dca-section">
-          <div class="dca-toggle-header" id="dca-toggle-header">
-            <span>定期定額設定</span>
-            <span class="dca-arrow">▼</span>
-          </div>
-          <div class="dca-body">
-            <div class="dca-enable-row">
-              <label class="toggle-switch">
-                <input type="checkbox" id="f-dca-enabled" />
-                <span class="toggle-track"></span>
-              </label>
-              <span style="font-size:13px;font-weight:600;color:var(--text)">啟用定期定額</span>
-            </div>
-            <div class="dca-fields" id="dca-fields">
-              <div class="field">
-                <label>投入週期</label>
-                <select id="f-dca-cycle">
-                  <option value="monthly">每月</option>
-                  <option value="quarterly">每季</option>
-                </select>
-              </div>
-              <div class="field">
-                <label>週期數（次）</label>
-                <input type="number" id="f-dca-times" placeholder="12" min="1" step="1" />
-              </div>
-              <div class="field">
-                <label>每次投入金額（TWD）</label>
-                <input type="number" id="f-dca-amount" placeholder="0" min="0" step="1000" />
-              </div>
-              <div class="field">
-                <label>下次投入日期</label>
-                <input type="date" id="f-dca-next-date" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="form-actions">
-      <button class="btn btn-ghost" id="modal-cancel">取消</button>
-      <button class="btn btn-primary" id="modal-save">儲存</button>
+      <a class="cta" href="./app.html">
+        <span>啟動資產終端</span>
+        <span class="cta__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+      </a>
+      <div class="launch-alt"><span>{佔位:學院課程與社群入口,連結待補}</span></div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ═════ Modal:設定目標配置 ═════ -->
-<div class="modal-overlay" id="target-modal-overlay">
-  <div class="modal" style="max-width:520px">
-    <div class="modal-header">
-      <div class="modal-title">設定目標配置</div>
-      <button class="icon-btn" id="target-modal-close" style="width:30px;height:30px;">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="target-editor-grid" id="target-inputs"></div>
-      <div style="margin-top:16px;font-size:13px">
-        <span id="target-sum-msg"></span>
+<footer>
+  <p class="foot-line">© 2026 登月學院 Moonlit · 本站為教育與試算工具,非投資建議<br>所有資料僅儲存於你的瀏覽器,我們不收集任何個人數據</p>
+</footer>
+
+<script type="module">
+/* ============================================================
+   金色星雲 WebGL 背景(移植自 @atzedent shader,經品牌金調色)
+   只用 resolution/time 兩個 uniform;深色主題限定,
+   淺色主題或無 WebGL2 時自動退回原本的漸層 wash + orbs。
+============================================================ */
+(() => {
+  const cv = document.getElementById('fx')
+  const bail = (why) => {
+    console.warn('fx 星雲降級(CSS 備援):', why)
+    document.body.classList.remove('fx-on')
+    document.body.classList.add('fx-off')
+    cv.remove()
+  }
+  cv.addEventListener('webglcontextlost', (e) => { e.preventDefault(); bail('WebGL context 丟失(GPU 行程異常)') })
+  const gl = cv.getContext('webgl2', { antialias: false, alpha: false })
+  if (!gl) { bail('WebGL2 不可用——多半是瀏覽器硬體加速被關閉'); return }
+
+  const VERT = '#version 300 es\nprecision highp float;\nin vec4 position;\nvoid main(){gl_Position=position;}'
+  const FRAG = `#version 300 es
+precision highp float;
+out vec4 O;
+uniform vec2 resolution;
+uniform float time;
+#define FC gl_FragCoord.xy
+#define T time
+#define R resolution
+#define MN min(R.x,R.y)
+float rnd(vec2 p) {
+  p=fract(p*vec2(12.9898,78.233));
+  p+=dot(p,p+34.56);
+  return fract(p.x*p.y);
+}
+float noise(in vec2 p) {
+  vec2 i=floor(p), f=fract(p), u=f*f*(3.-2.*f);
+  float a=rnd(i), b=rnd(i+vec2(1,0)), c=rnd(i+vec2(0,1)), d=rnd(i+1.);
+  return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);
+}
+float fbm(vec2 p) {
+  float t=.0, a=1.; mat2 m=mat2(1.,-.5,.2,1.2);
+  for (int i=0; i<5; i++) { t+=a*noise(p); p*=2.*m; a*=.5; }
+  return t;
+}
+float clouds(vec2 p) {
+  float d=1., t=.0;
+  for (float i=.0; i<3.; i++) {
+    float a=d*fbm(i*10.+p.x*.2+.2*(1.+i)*p.y+d+i*i+p);
+    t=mix(t,d,a);
+    d=a;
+    p*=2./(i+1.);
+  }
+  return t;
+}
+void main(void) {
+  vec2 uv=(FC-.5*R)/MN,st=uv*vec2(2,1);
+  vec3 col=vec3(0);
+  float bg=clouds(vec2(st.x+T*.5,-st.y));
+  uv*=1.-.3*(sin(T*.2)*.5+.5);
+  for (float i=1.; i<12.; i++) {
+    uv+=.1*cos(i*vec2(.1+.01*i, .8)+i*i+T*.5+.1*uv.x);
+    vec2 p=uv;
+    float d=length(p);
+    col+=.0018/d*(cos(sin(i)*vec3(1,2,3))+1.)*vec3(1.,.84,.58);
+    float b=noise(i+p+bg*1.731);
+    col+=.0028*b/length(max(p,vec2(b*p.x*.02,p.y)))*vec3(1.,.9,.72);
+    col=mix(col,vec3(bg*.34,bg*.235,bg*.11),d);
+  }
+  O=vec4(col,1);
+}`
+
+  const sh = (type, src) => {
+    const s = gl.createShader(type)
+    gl.shaderSource(s, src); gl.compileShader(s)
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.error('fx shader:', gl.getShaderInfoLog(s)); return null }
+    return s
+  }
+  const vsh = sh(gl.VERTEX_SHADER, VERT), fsh = sh(gl.FRAGMENT_SHADER, FRAG)
+  if (!vsh || !fsh) { bail('shader 編譯失敗'); return }
+  const prog = gl.createProgram()
+  gl.attachShader(prog, vsh); gl.attachShader(prog, fsh); gl.linkProgram(prog)
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { bail('program link 失敗:' + gl.getProgramInfoLog(prog)); return }
+
+  const buf = gl.createBuffer()
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf)
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW)
+  gl.useProgram(prog)
+  const aPos = gl.getAttribLocation(prog, 'position')
+  gl.enableVertexAttribArray(aPos)
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0)
+  const uRes = gl.getUniformLocation(prog, 'resolution')
+  const uTime = gl.getUniformLocation(prog, 'time')
+
+  document.body.classList.add('fx-on')
+
+  /* 尺寸守衛:含隱藏面板 0×0 → 可見的自癒;0.5×dpr 降載 */
+  const fit = () => {
+    const d = Math.max(1, 0.5 * devicePixelRatio)
+    const w = Math.round(innerWidth * d), h = Math.round(innerHeight * d)
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; gl.viewport(0, 0, w, h); return true }
+    return false
+  }
+  const fxReduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+  let sanity = false
+  function fxFrame(now) {
+    const changed = fit()
+    /* reduced-motion:凍結 time,只在尺寸變更時重畫靜態幀 */
+    if (cv.width > 0 && (!fxReduce || changed)) {
+      gl.uniform2f(uRes, cv.width, cv.height)
+      gl.uniform1f(uTime, (fxReduce ? 8 : now * 1e-3))
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+      /* 首幀自我驗證:讀回中線像素,全黑=driver 假成功 → 切 CSS 備援 */
+      if (!sanity && now > 300) {
+        sanity = true
+        const w = Math.min(cv.width, 256)
+        const px = new Uint8Array(w * 4)
+        gl.readPixels(0, cv.height >> 1, w, 1, gl.RGBA, gl.UNSIGNED_BYTE, px)
+        let mx = 0
+        for (let i = 0; i < px.length; i += 4) mx = Math.max(mx, px[i], px[i + 1], px[i + 2])
+        if (mx < 3) { bail('渲染輸出全黑(driver 異常)'); return }
+        console.info('fx 星雲運行中', cv.width + '×' + cv.height, '峰值亮度', mx)
+      }
+    }
+    requestAnimationFrame(fxFrame)
+  }
+  requestAnimationFrame(fxFrame)
+})()
+
+/* ============================================================
+   CONFIG — 章節卡片與瀑布幾何(源自 cards-cascade 雛形)
+   文案佔位以 {佔位:…} 標記,直接改字串即可。
+============================================================ */
+const CONFIG = {
+  cards: [
+    { img: 'assets/cascade/mentor-shot-b.webp',  kicker: '章節 01 · 創立原因', title: '起點',   tag: 'Origin',
+      alt: '水丰刀主題演講,投影幕上是「我們相信,金融不該只屬於少數人」宣言', pos: '52% 40%',
+      meta: '世界上沒有一夜成功。每一次努力,都是為下一次起飛儲備燃料;每一次失敗,都讓我們離月球更近一步。' },
+    { img: 'assets/cascade/mentor-shot-a.webp',  kicker: '章節 02 · 品牌使命', title: '使命',   tag: 'Mission',
+      alt: '講師水丰刀於講台授課', pos: '45% 50%',
+      meta: '陪伴每一位相信改變的人,建立能力、累積價值、實現財富自由,最終登上屬於自己的月球。' },
+    { img: 'assets/cascade/class-interact.webp', kicker: '章節 03 · 我們解決什麼', title: '解題', tag: 'Solution',
+      alt: '水丰刀在課堂間與學員一對一互動解題', pos: '44% 28%',
+      meta: '大多數人不是不努力,而是看不見錢的流向。我們把資產、收支、複利與自由試算,放進同一座終端。' },
+    { img: 'assets/cascade/class-group.webp',    kicker: '章節 04 · 價值觀', title: '信念',   tag: 'Values',
+      alt: '登月課堂全體學員大合照', pos: '50% 45%',
+      meta: '溫暖・誠信・卓越・成長・利他・豐盛・登月——七個詞,是我們做每個決定的順序。' },
+    { img: 'assets/cascade/mentor-a.webp', kicker: '章節 05 · 創辦人 Founder', title: '水丰刀', tag: 'Founder',
+      alt: '創辦人水丰刀形象照', pos: '50% 12%',
+      fill: 'radial-gradient(120% 90% at 50% 0%, #2b2415 0%, #0a0e18 72%)',
+      meta: '『閱部客』46 萬訂閱知識型 YouTuber;連續兩年《年度區塊鏈前三十大影響力人物》、區塊鏈協會理事,投入知識教育與防詐推廣。' },
+    { img: 'assets/cascade/mentor-b.webp', kicker: '章節 06 · 團隊分析師 Analyst', title: 'Indigo', tag: 'Analyst',
+      alt: '團隊分析師 Indigo 形象照', pos: '50% 16%',
+      meta: '傳統技術分析(PA)年資 4 年,專注型態學實戰教學。' },
+  ],
+
+  aspect: 1.16,     // 卡高/卡寬
+  cardVW: 0.26,     // 卡寬占視窗寬比例
+  cardMin: 210,
+  cardMax: 400,
+
+  ease: 0.14,       // 每幀朝捲動位置平滑靠近的比率
+  scroll: { perCardVh: 24 },  // 每張卡吃掉的捲動量(vh)
+
+  geometry: {
+    crestTilt:  -18,
+    crestY:     0.20,
+    crestZ:     0.02,
+    backDecay:  0.80,
+    backTilt:   50,
+    backRise:   1.02,
+    backDepth:  1.05,
+    backShrink: 0.16,
+    frontDrop:  0.86,
+    frontFold:  120,
+    frontFwd:   0.30,
+    fadeStart:  1.30,
+    fadeEnd:    2.20,
+    backFade:   9.0,
+  },
+}
+
+/* ---------- build ---------- */
+const $ = id => document.getElementById(id)
+const section = $('cascade')
+const stage = $('stage')
+const deck  = $('deck')
+const live  = $('live')
+const railTrack = $('railTrack')
+const railFill = $('railFill'), railThumb = $('railThumb')
+const railCur = $('railCur'), railLabel = $('railLabel')
+
+const N = CONFIG.cards.length
+const cards = CONFIG.cards.map((c, i) => {
+  const el = document.createElement('article')
+  el.className = 'card'
+  el.innerHTML = `
+    <div class="card__face">
+      <img class="card__img" src="${c.img}" alt="${c.alt || c.title}" draggable="false" decoding="async">
+      <div class="card__scrim"></div>
+      <div class="card__body">
+        <div class="card__top">
+          <span class="card__idx">${String(i + 1).padStart(2, '0')} / ${String(N).padStart(2, '0')}</span>
+          <span class="card__tag">${c.tag}</span>
+        </div>
+        <div class="card__foot">
+          <p class="card__kicker">${c.kicker}</p>
+          <h2 class="card__title">${c.title}</h2>
+          <p class="card__meta">${c.meta}</p>
+        </div>
       </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" id="btn-cancel-targets">取消</button>
-      <button class="btn btn-primary" id="btn-save-targets">儲存目標</button>
-    </div>
-  </div>
-</div>
+    </div>`
+  if (c.fill) el.querySelector('.card__face').style.background = c.fill
+  if (c.pos)  el.querySelector('.card__img').style.objectPosition = c.pos
+  deck.appendChild(el)
+  return el
+})
 
-<!-- ═════ Modal:月收入來源 ═════ -->
-<div class="modal-overlay" id="income-modal-overlay">
-  <div class="modal income-modal">
-    <div class="im-header">
-      <span class="im-title">月收入來源</span>
-      <button class="im-close-btn" id="income-modal-close">✕</button>
-    </div>
-    <div class="im-divider"></div>
-    <div id="income-sources-list"></div>
-    <div class="im-add-row">
-      <input type="text"   id="income-new-name"   class="im-input im-input-name" placeholder="來源名稱（如：薪資）" />
-      <input type="number" id="income-new-amount" class="im-input im-input-amt"  placeholder="金額" min="0" step="1000" />
-      <button class="im-add-btn" id="btn-add-income-source">新增</button>
-    </div>
-    <div class="im-footer">
-      <div class="im-total">
-        <span class="im-total-label">合計月收入</span>
-        <span class="im-total-value" id="income-modal-total">$0</span>
-      </div>
-      <button class="im-close-text" id="btn-cancel-income">關閉</button>
-    </div>
-  </div>
-</div>
+/* 進度軌:每章一個 tick */
+$('railTot').textContent = '/' + String(N).padStart(2, '0')
+const ticks = CONFIG.cards.map((c, i) => {
+  const b = document.createElement('button')
+  b.className = 'rail__tick'; b.type = 'button'; b.setAttribute('role', 'tab')
+  b.setAttribute('aria-label', `章節 ${i + 1}:${c.title}`)
+  b.style.top = (N > 1 ? (i / (N - 1)) * 100 : 0) + '%'
+  b.addEventListener('click', () => scrollToRaw(N > 1 ? i / (N - 1) : 0, true))
+  railTrack.appendChild(b)
+  return b
+})
 
-<!-- ── Toast ── -->
-<div id="toast"></div>
-
-<script>
-// ── Utilities ──────────────────────────────────────────────
-
-const $ = id => document.getElementById(id);
-
-// ── 主題(深/淺)輔助 ────────────────────────────────────────
-const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const isLightTheme = () => document.documentElement.dataset.theme === 'light';
-
-const fmt = n => {
-  if (n == null || isNaN(n)) return '—';
-  return (n < 0 ? '-' : '') + '$' + Math.abs(Math.round(n)).toLocaleString('zh-TW');
-};
-
-const fmtPct = n => {
-  if (n == null || isNaN(n) || !isFinite(n)) return '—';
-  return (n >= 0 ? '+' : '') + n.toFixed(2) + '%';
-};
-
-function toast(msg, ok = true) {
-  const el = $('toast');
-  el.textContent = msg;
-  el.style.borderColor = ok ? 'var(--accent2)' : 'var(--danger)';
-  el.classList.add('show');
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.classList.remove('show'), 2200);
+/* ---------- 響應式排版 ---------- */
+let CW = 380, CH = 440
+function layout() {
+  const vw = innerWidth, vh = innerHeight
+  CW = Math.round(Math.min(CONFIG.cardMax, Math.max(CONFIG.cardMin, vw * CONFIG.cardVW)))
+  CH = Math.round(CW * CONFIG.aspect)
+  const maxCH = vh * 0.5
+  if (CH > maxCH) { CH = Math.round(maxCH); CW = Math.round(CH / CONFIG.aspect) }
+  stage.style.setProperty('--cw', CW + 'px')
+  stage.style.setProperty('--ch', CH + 'px')
+  stage.style.setProperty('--persp', Math.max(1200, Math.min(vw, vh) * 2.5) + 'px')
+  stage.style.setProperty('--vanish', '38%')
+  const wide = vw > 880
+  stage.style.setProperty('--deckX', wide ? '68%' : '50%')
+  stage.style.setProperty('--vanishX', wide ? '66%' : '50%')
+  stage.style.setProperty('--deckY', wide ? '50%' : '72%')
 }
+addEventListener('resize', layout); layout()
 
-// ── Category Colors ────────────────────────────────────────
+/* 高捲動軌:100vh 釘住 + 每卡一段捲動 */
+section.style.height = (100 + (N - 1) * CONFIG.scroll.perCardVh) + 'vh'
 
-// 深色底最佳化調色盤(月光金錨定,亮度提升確保對比)
-const CAT_COLORS_D = {
-  '儲蓄帳戶': '#45d0b4',
-  '台股/ETF':  '#5fb2ff',
-  '基金':      '#a78bfa',
-  '美股':      '#7c8cf8',
-  '區塊鏈套利': '#3ec9d6',
-  '區塊鏈交易': '#f7a94b',
-  '保險':      '#f0876b',
-  '現金':      '#a8a7a0',
-  '外幣':      '#ef7fb2',
-  '房地產':    '#a2c96a',
-  '貴金屬':    '#e8c987',
-  '定存':      '#6f9fb8',
-};
+/* ---------- 摺疊幾何:p → 卡片 3D 變換 ---------- */
+const G = CONFIG.geometry
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x))
 
-const CAT_BADGE_BG_D = {
-  '儲蓄帳戶': 'rgba(69,208,180,0.13)',
-  '台股/ETF':  'rgba(95,178,255,0.13)',
-  '基金':      'rgba(167,139,250,0.13)',
-  '美股':      'rgba(124,140,248,0.13)',
-  '區塊鏈套利': 'rgba(62,201,214,0.13)',
-  '區塊鏈交易': 'rgba(247,169,75,0.13)',
-  '保險':      'rgba(240,135,107,0.13)',
-  '現金':      'rgba(168,167,160,0.13)',
-  '外幣':      'rgba(239,127,178,0.13)',
-  '房地產':    'rgba(162,201,106,0.13)',
-  '貴金屬':    'rgba(232,201,135,0.13)',
-  '定存':      'rgba(111,159,184,0.13)',
-};
+function place(el, p) {
+  const H = CH
+  let tilt, ty, tz, scale, opacity, sheen, z
 
-// 淺色底調色盤(加深飽和,確保羊皮紙底上的對比)
-const CAT_COLORS_L = {
-  '儲蓄帳戶': '#14806a',
-  '台股/ETF':  '#1f6fc4',
-  '基金':      '#6d51c9',
-  '美股':      '#4356c9',
-  '區塊鏈套利': '#1a8fa0',
-  '區塊鏈交易': '#b26a12',
-  '保險':      '#bf5233',
-  '現金':      '#6f6d64',
-  '外幣':      '#bf3d78',
-  '房地產':    '#5d8626',
-  '貴金屬':    '#8a6a2c',
-  '定存':      '#3f7d9e',
-};
-
-const CAT_BADGE_BG_L = {
-  '儲蓄帳戶': 'rgba(20,128,106,0.12)',
-  '台股/ETF':  'rgba(31,111,196,0.12)',
-  '基金':      'rgba(109,81,201,0.12)',
-  '美股':      'rgba(67,86,201,0.12)',
-  '區塊鏈套利': 'rgba(26,143,160,0.12)',
-  '區塊鏈交易': 'rgba(178,106,18,0.12)',
-  '保險':      'rgba(191,82,51,0.12)',
-  '現金':      'rgba(111,109,100,0.12)',
-  '外幣':      'rgba(191,61,120,0.12)',
-  '房地產':    'rgba(93,134,38,0.12)',
-  '貴金屬':    'rgba(138,106,44,0.12)',
-  '定存':      'rgba(63,125,158,0.12)',
-};
-
-let CAT_COLORS   = CAT_COLORS_D;
-let CAT_BADGE_BG = CAT_BADGE_BG_D;
-
-// ── Storage ────────────────────────────────────────────────
-
-const KEYS = { assets: 'assets', snapshots: 'snapshots', targets: 'pa_targets' };
-
-// ── 預設示範資料（剛出社會月光族：月薪 30K、總資產 10 萬）──────
-// 種子版本化:①首次造訪必灌 ②示範資料沒被使用者動過時,改版自動換新
-// ③使用者自己輸入/修改過的資料(seed_untouched 已清除)永不覆蓋
-const SEED_V = '3';
-(function seedDefaults() {
-  const hasData   = localStorage.getItem('assets') !== null;
-  const seedV     = localStorage.getItem('seed_v');
-  const untouched = localStorage.getItem('seed_untouched') === '1';
-  // 不 seed 的唯一情況:已有資料,且(版本相同 或 使用者動過且有版本標記)
-  const shouldSeed = !hasData || (seedV !== SEED_V && (untouched || seedV === null));
-  if (!shouldSeed) return;
-
-  const today = new Date();
-  const ym = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
-  const pmDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-  const pm = pmDate.getFullYear() + '-' + String(pmDate.getMonth() + 1).padStart(2, '0');
-
-  const assets = [
-    { id: 1, name: '郵局一年期定存', category: '定存', market: 80000, cost: 80000,
-      note: '家人耳提面命存下的,年利率 1.6%', date: ym + '-01' },
-    { id: 2, name: '郵局活存（薪轉戶）', category: '儲蓄帳戶', market: 15000, cost: 15000,
-      note: '發薪日後餘額', date: ym + '-01' },
-    { id: 3, name: '皮夾與悠遊卡', category: '現金', market: 5000, cost: 5000,
-      note: '', date: ym + '-01' },
-  ];
-
-  const monthlyIncome = [
-    { id: 1, name: '薪資', amount: 30000 },
-  ];
-
-  const expenses = [
-    // 本月（進行中）
-    { id: 101, date: ym + '-01', amount: 9000, category: '帳單', note: '套房房租' },
-    { id: 102, date: ym + '-01', amount: 980,  category: '帳單', note: '水電網路費' },
-    { id: 103, date: ym + '-02', amount: 599,  category: '帳單', note: '手機月租' },
-    { id: 104, date: ym + '-03', amount: 1280, category: '交通', note: '通勤月票' },
-    { id: 105, date: ym + '-05', amount: 850,  category: '飲食', note: '手搖飲＋宵夜' },
-    { id: 106, date: ym + '-07', amount: 1100, category: '娛樂', note: '週末唱歌聚會' },
-    { id: 107, date: ym + '-08', amount: 1450, category: '飲食', note: '本週外食累計' },
-    { id: 108, date: ym + '-09', amount: 620,  category: '娛樂', note: 'Netflix＋手遊月卡' },
-    // 上個月（完整月,月光實況:29,479 / 30,000）
-    { id: 201, date: pm + '-01', amount: 9000, category: '帳單', note: '套房房租' },
-    { id: 202, date: pm + '-01', amount: 1000, category: '帳單', note: '水電網路費' },
-    { id: 203, date: pm + '-02', amount: 599,  category: '帳單', note: '手機月租' },
-    { id: 204, date: pm + '-03', amount: 1280, category: '交通', note: '通勤月票' },
-    { id: 205, date: pm + '-10', amount: 9500, category: '飲食', note: '全月三餐外食' },
-    { id: 206, date: pm + '-15', amount: 2800, category: '購物', note: '網購＋治裝' },
-    { id: 207, date: pm + '-20', amount: 3200, category: '娛樂', note: '朋友聚餐＋電影' },
-    { id: 208, date: pm + '-26', amount: 900,  category: '娛樂', note: '遊戲課金＋訂閱' },
-    { id: 209, date: pm + '-28', amount: 1200, category: '其他', note: '雜支' },
-  ];
-
-  localStorage.setItem('assets',         JSON.stringify(assets));
-  localStorage.setItem('monthlyIncome',  JSON.stringify(monthlyIncome));
-  localStorage.setItem('expenses',       JSON.stringify(expenses));
-  localStorage.setItem('seed_v',         SEED_V);
-  localStorage.setItem('seed_untouched', '1');
-  // 換新示範時,清掉舊示範殘留的目標配置與試算設定(主題偏好保留)
-  localStorage.removeItem('pa_targets');
-  localStorage.removeItem('fc_targetExp');
-  localStorage.removeItem('fc_passive');
-})();
-
-function load(key) {
-  try { return JSON.parse(localStorage.getItem(key)) || []; }
-  catch { return []; }
-}
-
-function save(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
-  // 使用者動過資料 → 標記為非純示範,之後改版 seed 永不覆蓋
-  localStorage.removeItem('seed_untouched');
-}
-
-let assets    = load(KEYS.assets);
-let targets   = load(KEYS.targets);
-if (Array.isArray(targets)) targets = {};
-
-// 類別更名遷移(2026-07):加密貨幣 → 區塊鏈交易(預設年化同 25%,行為不變)
-if (assets.some(a => a.category === '加密貨幣')) {
-  assets.forEach(a => { if (a.category === '加密貨幣') a.category = '區塊鏈交易'; });
-  save(KEYS.assets, assets);
-}
-if (targets['加密貨幣'] != null) {
-  targets['區塊鏈交易'] = (targets['區塊鏈交易'] ?? 0) + targets['加密貨幣'];
-  delete targets['加密貨幣'];
-  save(KEYS.targets, targets);
-}
-
-// Normalize snapshots: migrate old {date,total} → new {date,totalValue,note,breakdown}
-let snapshots = load(KEYS.snapshots).map(s =>
-  s.totalValue !== undefined ? s : { date: s.date, totalValue: s.total ?? 0, note: '', breakdown: {} }
-);
-
-// ── Navigation ─────────────────────────────────────────────
-
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    $('page-' + tab.dataset.page).classList.add('active');
-    if (tab.dataset.page === 'dashboard') { renderDashboard(); renderFilterBar(); renderAssets(); }
-    if (tab.dataset.page === 'expenses')   renderExpenses();
-    if (tab.dataset.page === 'forecast')   renderForecast();
-  });
-});
-
-// ── Dashboard ─────────────────────────────────────────────
-
-
-function renderDashboard() {
-  const total = assets.reduce((s, a) => s + a.market, 0);
-
-  $('dash-date').textContent = '  ' + new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
-
-  // ── 總資產 ──
-  $('dm-total').textContent     = fmt(total);
-  $('dm-total').className       = 'dash-value';
-  $('dm-total-sub').textContent = `共 ${assets.length} 筆資產`;
-
-  // ── 最大持倉 ──
-  if (assets.length) {
-    const top = [...assets].sort((a, b) => b.market - a.market)[0];
-    $('dm-top-name').textContent = top.name;
-    $('dm-top-name').className   = 'dash-value dash-value--name';
-    $('dm-top-val').textContent  = `${fmt(top.market)}${total > 0 ? '  ·  ' + (top.market / total * 100).toFixed(1) + '%' : ''}`;
+  if (p >= 0) {
+    const a = 1 - Math.exp(-p * G.backDecay)
+    tilt    = G.crestTilt - G.backTilt * a
+    ty      = H * (G.crestY - G.backRise * a)
+    tz      = H * (G.crestZ - G.backDepth * a)
+    scale   = 1 - G.backShrink * a
+    sheen   = 0.5 + 0.4 * a
+    opacity = clamp(1 - (p - G.backFade) * 0.5, 0, 1)
+    z       = 1000 - Math.round(p * 10)
   } else {
-    $('dm-top-name').textContent = '—';
-    $('dm-top-val').textContent  = '';
+    const q = -p
+    tilt    = G.crestTilt + G.frontFold * q
+    ty      = H * (G.crestY + G.frontDrop * q)
+    const fwd = Math.sin(clamp(q, 0, 1) * Math.PI * 0.5)
+    tz      = H * (G.crestZ + G.frontFwd * fwd)
+    scale   = 1 + 0.05 * fwd
+    sheen   = 0.5 - 0.3 * clamp(q, 0, 1)
+    opacity = 1 - clamp((q - G.fadeStart) / (G.fadeEnd - G.fadeStart), 0, 1)
+    z       = 2000 + Math.round(q * 10)
   }
 
-  // ── 資產種類 ──
-  const cats = [...new Set(assets.map(a => a.category))];
-  $('dm-cats').textContent     = cats.length || '—';
-  $('dm-cats').className       = 'dash-value';
-  $('dm-cats-sub').textContent = cats.length
-    ? cats.slice(0, 3).join('、') + (cats.length > 3 ? ` 等 ${cats.length} 種` : '')
-    : '尚無資產';
-
-  // ── 本月開銷 ──
-  const expMonth    = new Date().toISOString().slice(0, 7);
-  const expMonthAmt = expenses.filter(e => e.date.startsWith(expMonth))
-                              .reduce((s, e) => s + e.amount, 0);
-  $('dm-exp').textContent = expMonthAmt > 0 ? fmt(expMonthAmt) : '$0';
-  $('dm-exp').className   = expMonthAmt > 0 ? 'dash-value negative' : 'dash-value';
-  const _dcaAmt = _dcaMonthlyTotal();
-  if (_totalIncome() > 0) {
-    const balance = _totalIncome() - _dcaAmt - expMonthAmt;
-    $('dm-exp-sub').textContent = `可用餘額 ${fmt(Math.abs(balance))}${balance < 0 ? '（超支）' : ''}`;
-  } else {
-    $('dm-exp-sub').textContent = '未設定月收入';
-  }
-  // Populate popover values
-  $('epop-income').textContent  = _totalIncome() > 0 ? fmt(_totalIncome()) : '未設定';
-  $('epop-dca').textContent     = fmt(_dcaAmt);
-  $('epop-exp').textContent     = fmt(expMonthAmt);
-  const _popBalance = _totalIncome() - _dcaAmt - expMonthAmt;
-  const _popBalEl   = $('epop-balance');
-  _popBalEl.textContent = _totalIncome() > 0 ? fmt(Math.abs(_popBalance)) : '—';
-  _popBalEl.className   = 'epr-val ' + (_popBalance >= 0 ? 'positive' : 'negative');
-
-  // Allocation card in dashboard
-  const byCategory = assets.reduce((acc, a) => {
-    acc[a.category] = (acc[a.category] ?? 0) + a.market;
-    return acc;
-  }, {});
-  const sorted = Object.entries(byCategory).sort((a, b) => b[1] - a[1]);
-  _renderDoughnut(sorted, total);
-  _renderAllocList(sorted, total);
+  el.style.opacity = opacity
+  el.style.zIndex  = z
+  el.style.setProperty('--sheen', sheen.toFixed(3))
+  el.style.transform =
+    `translateY(${ty.toFixed(1)}px) translateZ(${tz.toFixed(1)}px) rotateX(${tilt.toFixed(2)}deg) scale(${scale.toFixed(3)})`
 }
 
-
-// ── CSV Export ────────────────────────────────────────────
-
-$('btn-export-csv').addEventListener('click', () => {
-  if (!assets.length) { toast('尚無資產可匯出', false); return; }
-  const total   = assets.reduce((s, a) => s + a.market, 0);
-  const headers = ['資產名稱', '類別', '市值(TWD)', '佔比(%)', '更新日期', '備註'];
-  const rows    = assets.map(a => {
-    const alloc = total > 0 ? (a.market / total * 100).toFixed(2) : '';
-    return [a.name, a.category, a.market, alloc, a.date ?? '', a.note ?? '']
-      .map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
-  });
-  const csv  = '﻿' + [headers.join(','), ...rows].join('\r\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url  = URL.createObjectURL(blob);
-  const el   = document.createElement('a');
-  el.href = url; el.download = `資產明細_${new Date().toISOString().slice(0, 10)}.csv`;
-  el.click();
-  URL.revokeObjectURL(url);
-  toast('CSV 已匯出');
-});
-
-// ── Asset Modal ────────────────────────────────────────────
-
-let editId = null;
-
-function openModal(asset = null) {
-  editId = asset ? asset.id : null;
-  $('modal-title').textContent = asset ? '編輯資產' : '新增資產';
-  $('f-name').value     = asset?.name     ?? '';
-  $('f-category').value = asset?.category ?? '儲蓄帳戶';
-  $('f-market').value   = asset?.market   ?? '';
-  $('f-cost').value     = asset?.cost     ?? '';
-  $('f-note').value     = asset?.note     ?? '';
-  $('f-date').value     = asset?.date     ?? new Date().toISOString().slice(0,10);
-
-  // DCA fields
-  const dca = asset?.dca ?? {};
-  const dcaEnabled = !!dca.enabled;
-  $('f-dca-enabled').checked      = dcaEnabled;
-  $('f-dca-cycle').value          = dca.cycle      ?? 'monthly';
-  $('f-dca-times').value          = dca.times      ?? '';
-  $('f-dca-amount').value         = dca.amountPerTime ?? '';
-  $('f-dca-next-date').value      = dca.nextDate   ?? '';
-  $('dca-fields').classList.toggle('visible', dcaEnabled);
-  // Auto-expand DCA section if enabled, collapse if not
-  $('dca-section').classList.toggle('open', dcaEnabled);
-
-  $('asset-modal').classList.add('open');
-  $('f-name').focus();
-}
-
-function closeModal() {
-  $('asset-modal').classList.remove('open');
-  editId = null;
-}
-
-// DCA section collapse toggle
-$('dca-toggle-header').addEventListener('click', () => {
-  $('dca-section').classList.toggle('open');
-});
-
-// DCA enable/disable checkbox
-$('f-dca-enabled').addEventListener('change', () => {
-  $('dca-fields').classList.toggle('visible', $('f-dca-enabled').checked);
-});
-
-$('btn-add-asset').addEventListener('click', () => openModal());
-$('modal-close').addEventListener('click', closeModal);
-$('modal-cancel').addEventListener('click', closeModal);
-
-$('asset-modal').addEventListener('click', e => {
-  if (e.target === $('asset-modal')) closeModal();
-});
-
-$('modal-save').addEventListener('click', () => {
-  const name   = $('f-name').value.trim();
-  const market = parseFloat($('f-market').value);
-  const cost   = parseFloat($('f-cost').value);
-
-  if (!name) { toast('請填寫資產名稱', false); return; }
-  if (isNaN(market) || market < 0) { toast('市值請輸入有效數字', false); return; }
-  if (isNaN(cost)   || cost < 0)   { toast('成本請輸入有效數字', false); return; }
-
-  const dcaEnabled = $('f-dca-enabled').checked;
-  const dca = {
-    enabled:       dcaEnabled,
-    cycle:         $('f-dca-cycle').value,
-    times:         parseInt($('f-dca-times').value) || 0,
-    amountPerTime: parseFloat($('f-dca-amount').value) || 0,
-    nextDate:      $('f-dca-next-date').value,
-  };
-
-  if (editId) {
-    const idx = assets.findIndex(a => a.id === editId);
-    if (idx !== -1) {
-      assets[idx] = { ...assets[idx],
-        name, market, cost,
-        category: $('f-category').value,
-        note:     $('f-note').value.trim(),
-        date:     $('f-date').value,
-        dca,
-      };
-    }
-    toast('已更新資產');
-  } else {
-    assets.push({
-      id:       Date.now(),
-      name,
-      market,
-      cost,
-      category: $('f-category').value,
-      note:     $('f-note').value.trim(),
-      date:     $('f-date').value,
-      dca,
-    });
-    toast('已新增資產');
-  }
-
-  save(KEYS.assets, assets);
-  closeModal();
-  renderDashboard();
-  renderFilterBar();
-  renderAssets();
-  updateHeader();
-});
-
-// ── Filter ────────────────────────────────────────────────
-
-let currentFilter = 'all';
-
-function renderFilterBar() {
-  const bar = $('filter-bar');
-  const cats = [...new Set(assets.map(a => a.category))].sort();
-
-  bar.innerHTML = `<button class="filter-chip${currentFilter === 'all' ? ' active' : ''}" data-cat="all">全部</button>`;
-
-  cats.forEach(cat => {
-    const color = CAT_COLORS[cat] ?? '#ccc';
-    const isActive = currentFilter === cat;
-    const btn = document.createElement('button');
-    btn.className = 'filter-chip' + (isActive ? ' active' : '');
-    btn.dataset.cat = cat;
-    btn.style.cssText = isActive ? `background:${color};border-color:${color};color:#08080a` : `border-color:${color}66;color:${color}`;
-    btn.textContent = cat;
-    bar.appendChild(btn);
-  });
-
-  bar.querySelectorAll('.filter-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      currentFilter = chip.dataset.cat;
-      renderFilterBar();
-      renderAssets();
-    });
-  });
-}
-
-// ── Render Assets ──────────────────────────────────────────
-
-function renderAssets() {
-  const tbody  = $('asset-tbody');
-  const tfoot  = $('asset-tfoot');
-  const allTotal = assets.reduce((s, a) => s + a.market, 0);
-
-  const visible = currentFilter === 'all'
-    ? assets
-    : assets.filter(a => a.category === currentFilter);
-
-  $('asset-empty').style.display = visible.length ? 'none' : '';
-  tbody.querySelectorAll('tr.data-row').forEach(r => r.remove());
-
-  let visMarket = 0;
-
-  visible.forEach(a => {
-    visMarket += a.market;
-
-    const alloc  = allTotal > 0 ? (a.market / allTotal) * 100 : 0;
-    const color  = CAT_COLORS[a.category] ?? '#ccc';
-    const bgCol  = CAT_BADGE_BG[a.category] ?? 'rgba(200,200,200,0.1)';
-
-    const dcaBadge = (() => {
-      const d = a.dca;
-      if (!d?.enabled || !d.amountPerTime) return '';
-      const label = d.cycle === 'quarterly' ? '每季' : '每月';
-      return `<span class="dca-badge">${label} ${fmt(d.amountPerTime)}</span>`;
-    })();
-
-    const tr = document.createElement('tr');
-    tr.className = 'data-row';
-    tr.innerHTML = `
-      <td><strong>${a.name}</strong>${a.note ? `<br><span style="font-size:11px;color:var(--text2)">${a.note}</span>` : ''}</td>
-      <td><span class="category-badge" style="color:${color};background:${bgCol}">${a.category}</span></td>
-      <td><strong>${fmt(a.market)}</strong></td>
-      <td style="color:var(--text2)">${alloc.toFixed(1)}%</td>
-      <td style="color:var(--text2)">${a.date ?? '—'}</td>
-      <td>${dcaBadge}</td>
-      <td>
-        <button class="btn btn-ghost btn-sm" onclick="openModal(assets.find(x=>x.id===${a.id}))">編輯</button>
-        <button class="btn btn-danger btn-sm" style="margin-left:6px" onclick="deleteAsset(${a.id})">刪除</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  // Totals footer
-  const visAlloc = allTotal > 0 ? (visMarket / allTotal * 100).toFixed(1) : '—';
-
-  tfoot.innerHTML = visible.length ? `
-    <tr>
-      <td class="tf-label">合計（${visible.length} 筆）</td>
-      <td></td>
-      <td style="font-size:15px">${fmt(visMarket)}</td>
-      <td style="color:var(--text2)">${visAlloc}%</td>
-      <td colspan="3"></td>
-    </tr>` : '';
-
-  // Summary card
-  $('sum-market').textContent = fmt(allTotal);
-  $('sum-count').textContent  = `共 ${assets.length} 筆資產`;
-  renderDCASummary();
-}
-
-function renderDCASummary() {
-  const dcaAssets = assets.filter(a => a.dca?.enabled && a.dca.amountPerTime > 0);
-  const row = $('dca-summary-row');
-  if (!dcaAssets.length) { row.style.display = 'none'; return; }
-  row.style.display = '';
-
-  let monthlyTotal = 0, quarterlyTotal = 0;
-  dcaAssets.forEach(a => {
-    if (a.dca.cycle === 'quarterly') {
-      quarterlyTotal += a.dca.amountPerTime;
-      monthlyTotal   += a.dca.amountPerTime / 3;
-    } else {
-      monthlyTotal   += a.dca.amountPerTime;
-      quarterlyTotal += a.dca.amountPerTime * 3;
-    }
-  });
-
-  $('dca-monthly-total').textContent   = fmt(monthlyTotal);
-  $('dca-quarterly-total').textContent = fmt(quarterlyTotal);
-  $('dca-enabled-count').textContent   = dcaAssets.length;
-}
-
-window.deleteAsset = function(id) {
-  if (!confirm('確定要刪除這筆資產？')) return;
-  assets = assets.filter(a => a.id !== id);
-  save(KEYS.assets, assets);
-  renderDashboard();
-  renderFilterBar();
-  renderAssets();
-  updateHeader();
-  toast('已刪除');
-};
-
-// ── Header ────────────────────────────────────────────────
-
-function updateHeader() {
-  const total = assets.reduce((s, a) => s + a.market, 0);
-  $('header-total').textContent = total ? fmt(total) : '—';
-}
-
-
-// ── Allocation (Chart.js) ─────────────────────────────────
-
-let chartDoughnut = null;
-let chartBar      = null;
-
-// Chart.js 全域預設(讀當前主題 CSS 變數;切換主題時重新套用)
-function _applyChartDefaults() {
-  Chart.defaults.color       = cssVar('--chart-tick');
-  Chart.defaults.borderColor = cssVar('--chart-grid');
-  Chart.defaults.font.family = "'Onest', 'Noto Sans TC', sans-serif";
-}
-_applyChartDefaults();
-
-function _renderDoughnut(sorted, total) {
-  const canvas = $('chart-doughnut');
-  const empty  = $('doughnut-empty');
-
-  if (chartDoughnut) { chartDoughnut.destroy(); chartDoughnut = null; }
-
-  if (!sorted.length) {
-    canvas.style.display = 'none';
-    empty.style.display  = '';
-    return;
-  }
-  canvas.style.display = '';
-  empty.style.display  = 'none';
-
-  const labels = sorted.map(([k]) => k);
-  const values = sorted.map(([, v]) => v);
-  const colors = labels.map(l => CAT_COLORS[l] ?? '#888');
-
-  const centerTextPlugin = {
-    id: 'centerText',
-    beforeDraw(chart) {
-      const { ctx, chartArea: { top, bottom, left, right } } = chart;
-      const cx = (left + right) / 2;
-      const cy = (top + bottom) / 2;
-      ctx.save();
-      ctx.textAlign    = 'center';
-      ctx.fillStyle    = cssVar('--chart-tick');
-      ctx.font         = "11px 'Onest','Noto Sans TC',sans-serif";
-      ctx.fillText('總資產', cx, cy - 11);
-      ctx.fillStyle    = cssVar('--gold');
-      ctx.font         = "700 16px 'Onest','Noto Sans TC',sans-serif";
-      ctx.fillText(fmt(total), cx, cy + 12);
-      ctx.restore();
-    }
-  };
-
-  chartDoughnut = new Chart(canvas, {
-    type: 'doughnut',
-    data: {
-      labels,
-      datasets: [{
-        data: values,
-        backgroundColor: colors,
-        borderColor: cssVar('--surface'),
-        borderWidth: 3,
-        hoverOffset: 8,
-      }]
-    },
-    options: {
-      responsive: true,
-      cutout: '60%',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => {
-              const pct = (ctx.parsed / total * 100).toFixed(1);
-              return `  ${ctx.label}：${fmt(ctx.parsed)}（${pct}%）`;
-            }
-          }
-        }
-      }
-    },
-    plugins: [centerTextPlugin]
-  });
-}
-
-function _renderAllocList(sorted, total) {
-  const el = $('alloc-list');
-
-  // merge: actual asset categories + categories with targets but no assets
-  const assetCatSet = new Set(sorted.map(([cat]) => cat));
-  const extraCats   = Object.keys(targets)
-    .filter(cat => targets[cat] > 0 && !assetCatSet.has(cat))
-    .map(cat => [cat, 0]);
-  const allRows = [...sorted, ...extraCats];
-
-  if (!allRows.length) {
-    el.innerHTML = '<div class="empty-state"><p>尚無資產資料</p></div>';
-    return;
-  }
-  el.innerHTML = allRows.map(([cat, val]) => {
-    const actualPct = total > 0 ? val / total * 100 : 0;
-    const targetPct = (targets[cat] != null && targets[cat] > 0) ? targets[cat] : null;
-    const color     = CAT_COLORS[cat] ?? '#888';
-
-    let badgeClass, badgeText;
-    if (targetPct == null) {
-      badgeClass = 'badge-no-target'; badgeText = '未設目標';
-    } else {
-      const diff = actualPct - targetPct;
-      if (Math.abs(diff) < 1) {
-        badgeClass = 'badge-ok';    badgeText = '✓ 達標';
-      } else if (diff > 0) {
-        badgeClass = 'badge-over';  badgeText = `超配 +${diff.toFixed(1)}%`;
-      } else {
-        badgeClass = 'badge-under'; badgeText = `不足 ${diff.toFixed(1)}%`;
-      }
-    }
-
-    const targetLine = targetPct != null
-      ? `<div class="alloc-bar-target-line" style="left:${Math.min(targetPct, 100)}%"></div>`
-      : '';
-
-    const pctInfo = targetPct != null
-      ? `實際 ${actualPct.toFixed(1)}% · 目標 ${targetPct}%`
-      : `實際 ${actualPct.toFixed(1)}%`;
-
-    return `
-      <div class="alloc-cat-row">
-        <div class="alloc-cat-label">
-          <span class="alloc-cat-dot" style="background:${color}"></span>
-          <span class="alloc-cat-name">${cat}</span>
-        </div>
-        <div class="alloc-bar-wrap">
-          <div class="alloc-bar-track">
-            <div class="alloc-bar-clip">
-              <div class="alloc-bar-fill" style="width:${actualPct.toFixed(2)}%;background:${color}"></div>
-            </div>
-            ${targetLine}
-          </div>
-        </div>
-        <div class="alloc-pct-info">${pctInfo}</div>
-        <span class="alloc-badge ${badgeClass}">${badgeText}</span>
-      </div>`;
-  }).join('');
-}
-
-// ── Target Allocation Editor ──────────────────────────────
-
-function renderTargetInputs() {
-  const usedCats  = new Set(assets.map(a => a.category));
-  const cats      = Object.keys(CAT_COLORS);
-  const container = $('target-inputs');
-
-  container.innerHTML = cats.map(cat => {
-    const color = CAT_COLORS[cat] ?? '#888';
-    const val   = targets[cat] ?? 0;
-    return `
-      <div class="target-input-row">
-        <span class="target-cat-dot" style="background:${color}"></span>
-        <span class="target-cat-name">${cat}</span>
-        <input type="number" class="target-input" data-cat="${cat}"
-               value="${val}" min="0" max="100" step="1" />
-        <span class="target-pct-label">%</span>
-      </div>`;
-  }).join('');
-
-  container.querySelectorAll('.target-input').forEach(inp =>
-    inp.addEventListener('input', _updateTargetSum));
-  _updateTargetSum();
-}
-
-function _updateTargetSum() {
-  const inputs = document.querySelectorAll('.target-input');
-  const sum    = [...inputs].reduce((s, i) => s + (parseFloat(i.value) || 0), 0);
-  const msg    = $('target-sum-msg');
-  const ok     = Math.abs(sum - 100) < 0.01;
-  msg.textContent = `合計：${sum.toFixed(1)}%` + (ok ? '  ✓' : '（目標應為 100%）');
-  msg.style.color = ok ? 'var(--accent2)' : 'var(--warn)';
-}
-
-function _closeTargetModal() {
-  $('target-modal-overlay').classList.remove('open');
-}
-
-$('btn-edit-targets').addEventListener('click', () => {
-  $('target-modal-overlay').classList.add('open');
-  renderTargetInputs();
-});
-
-$('target-modal-close').addEventListener('click', _closeTargetModal);
-$('btn-cancel-targets').addEventListener('click', _closeTargetModal);
-$('target-modal-overlay').addEventListener('click', e => {
-  if (e.target === $('target-modal-overlay')) _closeTargetModal();
-});
-
-$('btn-save-targets').addEventListener('click', () => {
-  document.querySelectorAll('.target-input').forEach(inp => {
-    targets[inp.dataset.cat] = parseFloat(inp.value) || 0;
-  });
-  save(KEYS.targets, targets);
-  _closeTargetModal();
-  const byCategory = assets.reduce((acc, a) => {
-    acc[a.category] = (acc[a.category] ?? 0) + a.market;
-    return acc;
-  }, {});
-  const total  = assets.reduce((s, a) => s + a.market, 0);
-  const sorted = Object.entries(byCategory).sort((a, b) => b[1] - a[1]);
-  _renderAllocList(sorted, total);
-  toast('目標配置已儲存');
-});
-
-
-
-// ── Expense Constants ────────────────────────────────────
-
-const EXP_CATS = ['飲食','交通','娛樂','醫療','購物','帳單','投資','其他'];
-
-const EXP_COLORS_D = {
-  '飲食':'#f7a94b','交通':'#5fb2ff','娛樂':'#c084fc','醫療':'#ff7a70',
-  '購物':'#ef7fb2','帳單':'#a8a7a0','投資':'#45d0b4','其他':'#8b8a82',
-};
-const EXP_BADGE_BG_D = {
-  '飲食':'rgba(247,169,75,0.13)','交通':'rgba(95,178,255,0.13)',
-  '娛樂':'rgba(192,132,252,0.13)','醫療':'rgba(255,122,112,0.13)',
-  '購物':'rgba(239,127,178,0.13)','帳單':'rgba(168,167,160,0.13)',
-  '投資':'rgba(69,208,180,0.13)','其他':'rgba(139,138,130,0.13)',
-};
-const EXP_COLORS_L = {
-  '飲食':'#b26a12','交通':'#1f6fc4','娛樂':'#8b46c9','醫療':'#c23b32',
-  '購物':'#bf3d78','帳單':'#6f6d64','投資':'#14806a','其他':'#6d665a',
-};
-const EXP_BADGE_BG_L = {
-  '飲食':'rgba(178,106,18,0.12)','交通':'rgba(31,111,196,0.12)',
-  '娛樂':'rgba(139,70,201,0.12)','醫療':'rgba(194,59,50,0.12)',
-  '購物':'rgba(191,61,120,0.12)','帳單':'rgba(111,109,100,0.12)',
-  '投資':'rgba(20,128,106,0.12)','其他':'rgba(109,102,90,0.12)',
-};
-
-let EXP_COLORS   = EXP_COLORS_D;
-let EXP_BADGE_BG = EXP_BADGE_BG_D;
-
-// 依當前主題切換調色盤(圖表/徽章/篩選 chips 共用)
-function _applyThemePalettes() {
-  const L = isLightTheme();
-  CAT_COLORS   = L ? CAT_COLORS_L   : CAT_COLORS_D;
-  CAT_BADGE_BG = L ? CAT_BADGE_BG_L : CAT_BADGE_BG_D;
-  EXP_COLORS   = L ? EXP_COLORS_L   : EXP_COLORS_D;
-  EXP_BADGE_BG = L ? EXP_BADGE_BG_L : EXP_BADGE_BG_D;
-}
-_applyThemePalettes();
-
-// ── Expense Storage ───────────────────────────────────────
-
-const EXP_KEY    = 'expenses';
-const INCOME_KEY = 'monthlyIncome';
-
-let expenses      = load(EXP_KEY);
-let incomeSources = (() => {
-  const raw = localStorage.getItem(INCOME_KEY);
-  if (!raw) return [];
-  const parsed = JSON.parse(raw);
-  if (!Array.isArray(parsed)) {
-    return parsed.amount > 0
-      ? [{ id: Date.now(), name: parsed.note || '主要收入', amount: parsed.amount }]
-      : [];
-  }
-  return parsed;
-})();
-function _totalIncome() { return incomeSources.reduce((s, x) => s + (x.amount || 0), 0); }
-function _saveIncomeSources() {
-  localStorage.setItem(INCOME_KEY, JSON.stringify(incomeSources));
-  localStorage.removeItem('seed_untouched');
-}
-
-// ── Expense State ─────────────────────────────────────────
-
-const todayStr       = new Date().toISOString().slice(0, 10);
-const currentYM      = todayStr.slice(0, 7);
-let   viewMonth      = currentYM;   // "YYYY-MM"
-let   expFilterCat   = 'all';
-let   expPieChart    = null;
-
-// ── Expense Helpers ───────────────────────────────────────
-
-function monthExpenses(ym = viewMonth) {
-  return expenses.filter(e => e.date.startsWith(ym));
-}
-
-function prevMonth(ym) {
-  const [y, m] = ym.split('-').map(Number);
-  return m === 1 ? `${y-1}-12` : `${y}-${String(m-1).padStart(2,'0')}`;
-}
-function nextMonth(ym) {
-  const [y, m] = ym.split('-').map(Number);
-  return m === 12 ? `${y+1}-01` : `${y}-${String(m+1).padStart(2,'0')}`;
-}
-
-// ── Render Expenses ───────────────────────────────────────
-
-function renderExpenses() {
-  const ym    = viewMonth;
-  const list  = monthExpenses(ym);
-  const total = list.reduce((s, e) => s + e.amount, 0);
-
-  // ── Metric cards ──────────────────────────────────────
-  const income  = _totalIncome();
-  const dcaAmt  = _dcaMonthlyTotal();
-  const balance = income - dcaAmt - total;
-
-  $('imc-income').textContent = fmt(income);
-  $('imc-income-note').textContent = incomeSources.length === 0
-    ? '未設定來源'
-    : incomeSources.length === 1
-    ? incomeSources[0].name
-    : `共 ${incomeSources.length} 個來源`;
-
-  $('imc-dca').textContent = fmt(dcaAmt);
-  $('imc-dca-sub').textContent = dcaAmt > 0 ? `${assets.filter(a => a.dca?.enabled && a.dca.amountPerTime).length} 個資產` : '尚無定期定額';
-
-  $('imc-balance').textContent = fmt(Math.abs(balance));
-  $('imc-balance').className   = 'imc-value ' + (balance >= 0 ? 'positive' : 'negative');
-  $('imc-balance-sub').textContent = balance >= 0 ? '收入 − 定額 − 開銷' : '⚠ 超出收入';
-
-  $('exp-month-total').textContent = fmt(total);
-  $('exp-month-count').textContent = `共 ${list.length} 筆`;
-
-  // ── Allocation bar ─────────────────────────────────────
-  const noIncome = $('income-alloc-no-income');
-  const overflow = $('income-alloc-overflow');
-  if (income > 0) {
-    noIncome.style.display = 'none';
-    const dcaPct  = Math.min(dcaAmt  / income * 100, 100);
-    const expPct  = Math.min(total   / income * 100, Math.max(0, 100 - dcaPct));
-    const balPct  = Math.max(0, 100 - dcaPct - expPct);
-    const isOver  = (dcaAmt + total) > income;
-
-    $('ias-dca').style.width     = dcaPct.toFixed(2) + '%';
-    $('ias-expense').style.width = expPct.toFixed(2) + '%';
-    $('ias-balance').style.width = balPct.toFixed(2) + '%';
-
-    $('ial-dca-val').textContent = fmt(dcaAmt);
-    $('ial-dca-pct').textContent = `(${(dcaAmt / income * 100).toFixed(1)}%)`;
-    $('ial-exp-val').textContent = fmt(total);
-    $('ial-exp-pct').textContent = `(${(total / income * 100).toFixed(1)}%)`;
-    $('ial-bal-val').textContent = fmt(Math.abs(balance));
-    $('ial-bal-pct').textContent = isOver ? '(超出)' : `(${(balPct).toFixed(1)}%)`;
-
-    overflow.style.display = isOver ? '' : 'none';
-  } else {
-    noIncome.style.display = '';
-    $('ias-dca').style.width = '0%';
-    $('ias-expense').style.width = '0%';
-    $('ias-balance').style.width = '0%';
-    ['ial-dca-val','ial-dca-pct','ial-exp-val','ial-exp-pct','ial-bal-val','ial-bal-pct']
-      .forEach(id => { const el = $(id); if (el) el.textContent = '—'; });
-    overflow.style.display = 'none';
-  }
-
-  // ── Month nav ──────────────────────────────────────────
-  $('exp-month-label').textContent = ym;
-  $('exp-next-month').disabled = ym >= currentYM;
-
-  if (!$('eq-date').value) $('eq-date').value = todayStr;
-
-  _renderExpFilterBar(list);
-  _renderExpList(list);
-  _renderExpPie(list, total);
-}
-
-function _renderExpFilterBar(list) {
-  const bar  = $('exp-filter-bar');
-  const cats = [...new Set(list.map(e => e.category))].sort();
-
-  bar.innerHTML = `<button class="filter-chip${expFilterCat==='all'?' active':''}" data-cat="all">全部</button>`;
-  cats.forEach(cat => {
-    const color  = EXP_COLORS[cat] ?? '#888';
-    const active = expFilterCat === cat;
-    const btn    = document.createElement('button');
-    btn.className  = 'filter-chip' + (active ? ' active' : '');
-    btn.dataset.cat = cat;
-    btn.style.cssText = active
-      ? `background:${color};border-color:${color};color:#08080a`
-      : `border-color:${color}44;color:${color}`;
-    btn.textContent = cat;
-    bar.appendChild(btn);
-  });
-
-  bar.querySelectorAll('.filter-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      expFilterCat = chip.dataset.cat;
-      _renderExpFilterBar(list);
-      _renderExpList(list);
-    });
-  });
-}
-
-function _renderExpList(list) {
-  const card  = $('exp-list-card');
-  const empty = $('exp-list-empty');
-
-  card.querySelectorAll('.exp-item').forEach(el => el.remove());
-
-  const visible = expFilterCat === 'all'
-    ? list : list.filter(e => e.category === expFilterCat);
-
-  empty.style.display = visible.length ? 'none' : '';
-
-  // Sort newest first
-  [...visible].sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id)
-    .forEach(e => {
-      const color = EXP_COLORS[e.category] ?? '#888';
-      const bg    = EXP_BADGE_BG[e.category] ?? 'rgba(200,200,200,0.1)';
-      const item  = document.createElement('div');
-      item.className = 'exp-item';
-      item.innerHTML = `
-        <span class="exp-item-cat">
-          <span class="category-badge" style="color:${color};background:${bg}">${e.category}</span>
-        </span>
-        <span class="exp-item-note">${e.note || '—'}</span>
-        <span class="exp-item-date">${e.date.slice(5)}</span>
-        <span class="exp-item-amount">-${fmt(e.amount)}</span>
-        <button class="exp-item-del" onclick="deleteExpense(${e.id})">✕</button>
-      `;
-      card.appendChild(item);
-    });
-}
-
-function _renderExpPie(list, total) {
-  const canvas = $('exp-pie-chart');
-  const empty  = $('exp-pie-empty');
-  const legend = $('exp-pie-legend');
-  if (expPieChart) { expPieChart.destroy(); expPieChart = null; }
-
-  const byCat = list.reduce((acc, e) => {
-    acc[e.category] = (acc[e.category] ?? 0) + e.amount;
-    return acc;
-  }, {});
-  const sorted = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
-
-  if (!sorted.length) {
-    canvas.style.display = 'none';
-    empty.style.display  = '';
-    legend.innerHTML     = '';
-    return;
-  }
-  canvas.style.display = '';
-  empty.style.display  = 'none';
-
-  expPieChart = new Chart(canvas, {
-    type: 'doughnut',
-    data: {
-      labels: sorted.map(([k]) => k),
-      datasets: [{
-        data: sorted.map(([,v]) => v),
-        backgroundColor: sorted.map(([k]) => EXP_COLORS[k] ?? '#888'),
-        borderColor: cssVar('--surface'),
-        borderWidth: 3,
-        hoverOffset: 6,
-      }]
-    },
-    options: {
-      responsive: true,
-      cutout: '58%',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => {
-              const pct = total > 0 ? (ctx.parsed / total * 100).toFixed(1) : 0;
-              return `  ${ctx.label}：${fmt(ctx.parsed)}（${pct}%）`;
-            }
-          }
-        }
-      }
-    }
-  });
-
-  legend.innerHTML = sorted.map(([cat, val]) => {
-    const pct   = total > 0 ? (val / total * 100).toFixed(1) : '0.0';
-    const color = EXP_COLORS[cat] ?? '#888';
-    return `<div style="display:flex;align-items:center;gap:8px;font-size:12px;">
-      <span style="width:9px;height:9px;border-radius:50%;background:${color};flex-shrink:0"></span>
-      <span style="flex:1;color:var(--text2)">${cat}</span>
-      <span style="color:var(--text2)">${pct}%</span>
-      <span style="font-weight:700;min-width:72px;text-align:right">${fmt(val)}</span>
-    </div>`;
-  }).join('');
-}
-
-// ── Expense CRUD ──────────────────────────────────────────
-
-$('btn-add-expense').addEventListener('click', () => {
-  const amount = parseFloat($('eq-amount').value);
-  const cat    = $('eq-category').value;
-  const note   = $('eq-note').value.trim();
-  const date   = $('eq-date').value;
-
-  if (!amount || amount <= 0) { toast('請輸入有效金額', false); return; }
-  if (!date)                  { toast('請選擇日期', false); return; }
-
-  expenses.push({ id: Date.now(), date, amount, category: cat, note });
-  save(EXP_KEY, expenses);
-
-  $('eq-amount').value = '';
-  $('eq-note').value   = '';
-  expFilterCat = 'all';
-  renderExpenses();
-  toast(`已新增：${cat} ${fmt(amount)}`);
-});
-
-// Enter key on amount triggers add
-$('eq-amount').addEventListener('keydown', e => {
-  if (e.key === 'Enter') $('btn-add-expense').click();
-});
-
-window.deleteExpense = function(id) {
-  expenses = expenses.filter(e => e.id !== id);
-  save(EXP_KEY, expenses);
-  renderExpenses();
-  toast('已刪除');
-};
-
-// ── Expense Breakdown Popover ─────────────────────────────
-
-$('btn-exp-breakdown').addEventListener('click', e => {
-  e.stopPropagation();
-  $('exp-breakdown-popover').classList.toggle('open');
-});
-
-document.addEventListener('click', () => {
-  $('exp-breakdown-popover').classList.remove('open');
-});
-
-// ── Month Navigation ──────────────────────────────────────
-
-$('exp-prev-month').addEventListener('click', () => {
-  viewMonth = prevMonth(viewMonth);
-  expFilterCat = 'all';
-  renderExpenses();
-});
-
-$('exp-next-month').addEventListener('click', () => {
-  if (viewMonth >= currentYM) return;
-  viewMonth = nextMonth(viewMonth);
-  expFilterCat = 'all';
-  renderExpenses();
-});
-
-// ── Income Modal ──────────────────────────────────────────
-
-function _renderIncomeSourcesList() {
-  const listEl = $('income-sources-list');
-  $('income-modal-total').textContent = fmt(_totalIncome());
-  if (incomeSources.length === 0) {
-    listEl.innerHTML = '<div class="isn-empty">尚未新增任何收入來源</div>';
-    return;
-  }
-  listEl.innerHTML = incomeSources.map(src => `
-    <div class="income-source-item">
-      <span class="isn-name">${src.name}</span>
-      <span class="isn-amount">${fmt(src.amount)}</span>
-      <button class="isn-del" data-id="${src.id}" title="刪除">×</button>
-    </div>
-  `).join('');
-  listEl.querySelectorAll('.isn-del').forEach(btn => {
-    btn.addEventListener('click', () => {
-      incomeSources = incomeSources.filter(s => String(s.id) !== btn.dataset.id);
-      _saveIncomeSources();
-      _renderIncomeSourcesList();
-      renderExpenses();
-      renderDashboard();
-    });
-  });
-}
-
-function _openIncomeModal() {
-  $('income-new-name').value = '';
-  $('income-new-amount').value = '';
-  _renderIncomeSourcesList();
-  $('income-modal-overlay').classList.add('open');
-  $('income-new-name').focus();
-}
-function _closeIncomeModal() {
-  $('income-modal-overlay').classList.remove('open');
-}
-
-$('btn-set-income').addEventListener('click', _openIncomeModal);
-$('income-modal-close').addEventListener('click', _closeIncomeModal);
-$('btn-cancel-income').addEventListener('click', _closeIncomeModal);
-$('income-modal-overlay').addEventListener('click', e => {
-  if (e.target === $('income-modal-overlay')) _closeIncomeModal();
-});
-
-$('btn-add-income-source').addEventListener('click', () => {
-  const name   = $('income-new-name').value.trim();
-  const amount = parseFloat($('income-new-amount').value);
-  if (!name)                        { $('income-new-name').focus();   return; }
-  if (isNaN(amount) || amount < 0)  { $('income-new-amount').focus(); return; }
-  incomeSources.push({ id: Date.now(), name, amount });
-  _saveIncomeSources();
-  _renderIncomeSourcesList();
-  $('income-new-name').value = '';
-  $('income-new-amount').value = '';
-  $('income-new-name').focus();
-  renderExpenses();
-  renderDashboard();
-  toast(`已新增：${name} ${fmt(amount)}`);
-});
-
-$('income-new-amount').addEventListener('keydown', e => {
-  if (e.key === 'Enter') $('btn-add-income-source').click();
-});
-
-// ── Forecast ──────────────────────────────────────────────
-
-const FORECAST_DEFAULT_RATES = {
-  '儲蓄帳戶':  0.8,
-  '台股/ETF':  8,
-  '基金':      6,
-  '美股':     10,
-  '區塊鏈套利': 15,
-  '區塊鏈交易': 25,
-  '保險':      3,
-  '現金':      0,
-  '外幣':      3,
-  '房地產':    3,
-  '貴金屬':    4,
-  '定存':      1.5,
-};
-
-let forecastYears        = 10;
-let forecastMonthly      = parseFloat(localStorage.getItem('fc_passive')) || 0;   // 每月被動收入(投入複利)
-let forecastRates        = {};
-let forecastLineChartInst = null;
-let forecastBarChartInst  = null;
-let fireChartInst        = null;
-let inflationEnabled     = false;
-let fireSwr              = parseFloat(localStorage.getItem('fc_swr')) || 4;       // 安全提領率 %
-let fireTargetExp        = parseFloat(localStorage.getItem('fc_targetExp')) || 0; // 財務自由目標月開銷
-
-const INFLATION_AFFECTED = new Set(['儲蓄帳戶', '現金', '外幣', '保險', '定存']);
-const INFLATION_RATE     = 2;
-
-function _effectiveRate(cat, nominalPct) {
-  if (inflationEnabled && INFLATION_AFFECTED.has(cat)) {
-    return Math.max(nominalPct - INFLATION_RATE, -INFLATION_RATE);
-  }
-  return nominalPct;
-}
-
-function _dcaMonthlyTotal() {
-  return assets.reduce((sum, a) => {
-    if (!a.dca?.enabled || !a.dca.amountPerTime) return sum;
-    const pm = a.dca.cycle === 'quarterly'
-      ? a.dca.amountPerTime / 3
-      : a.dca.amountPerTime;
-    return sum + pm;
-  }, 0);
-}
-
-function _initForecastRates() {
-  [...new Set(assets.map(a => a.category))].forEach(cat => {
-    if (forecastRates[cat] === undefined)
-      forecastRates[cat] = FORECAST_DEFAULT_RATES[cat] ?? 5;
-  });
-}
-
-// FV of a finite-period monthly annuity that then grows idle until target month
-function _fvDca(monthly, mr, activeMonths, totalMonths) {
-  if (activeMonths <= 0 || monthly <= 0) return 0;
-  const fvAccum = mr > 1e-9
-    ? monthly * (Math.pow(1 + mr, activeMonths) - 1) / mr
-    : monthly * activeMonths;
-  const idle = totalMonths - activeMonths;
-  return fvAccum * (idle > 0 ? Math.pow(1 + mr, idle) : 1);
-}
-
-function _calcForecast(rateShift = 0) {
-  const byCategory = assets.reduce((acc, a) => {
-    acc[a.category] = (acc[a.category] ?? 0) + a.market;
-    return acc;
-  }, {});
-  const total = Object.values(byCategory).reduce((s, v) => s + v, 0);
-
-  // Blended rate – used only for the manual extra monthly input
-  let blended = 0;
-  if (total > 0) {
-    Object.entries(byCategory).forEach(([cat, val]) => {
-      blended += (val / total) * Math.max(-0.99, (_effectiveRate(cat, forecastRates[cat] ?? 5) + rateShift) / 100);
-    });
-  }
-
-  // DCA-enabled assets resolved once
-  const dcaAssets = assets.filter(a => a.dca?.enabled && a.dca.amountPerTime > 0);
-
-  const pts = [];
-  for (let yr = 0; yr <= forecastYears; yr++) {
-    const nMonths = yr * 12;
-    let v = 0;
-
-    // 1. Existing assets compound at their category rate
-    Object.entries(byCategory).forEach(([cat, val]) => {
-      const r = Math.max(-0.99, (_effectiveRate(cat, forecastRates[cat] ?? 5) + rateShift) / 100);
-      v += val * Math.pow(1 + r, yr);
-    });
-
-    if (yr > 0) {
-      // 2. Per-asset DCA: use each asset's category rate, respect times
-      dcaAssets.forEach(a => {
-        const r       = Math.max(-0.99, (_effectiveRate(a.category, forecastRates[a.category] ?? 5) + rateShift) / 100);
-        const mr      = r / 12;
-        const monthly = a.dca.cycle === 'quarterly'
-          ? a.dca.amountPerTime / 3
-          : a.dca.amountPerTime;
-        // times = 0 means invest for the full forecast period
-        const cap = a.dca.times > 0
-          ? (a.dca.cycle === 'quarterly' ? a.dca.times * 3 : a.dca.times)
-          : nMonths;
-        const active = Math.min(nMonths, cap);
-        v += _fvDca(monthly, mr, active, nMonths);
-      });
-
-      // 3. Manual extra monthly contribution (fc-monthly input), blended rate
-      if (forecastMonthly > 0) {
-        const mr = blended / 12;
-        v += _fvDca(forecastMonthly, mr, nMonths, nMonths);
-      }
-    }
-
-    pts.push(Math.round(v));
-  }
-  return pts;
-}
-
-// Per-category compound growth data for stacked bar chart
-function _calcForecastByCategory() {
-  const byCategory = assets.reduce((acc, a) => {
-    acc[a.category] = (acc[a.category] ?? 0) + a.market;
-    return acc;
-  }, {});
-  const total = Object.values(byCategory).reduce((s, v) => s + v, 0);
-  const cats  = Object.keys(byCategory)
-    .filter(c => byCategory[c] > 0)
-    .sort((a, b) => byCategory[a] - byCategory[b]);
-
-  // Blended rate for manual monthly allocation
-  let blended = 0;
-  if (total > 0) {
-    cats.forEach(cat => {
-      blended += (byCategory[cat] / total) * Math.max(-0.99, _effectiveRate(cat, forecastRates[cat] ?? 5) / 100);
-    });
-  }
-
-  const data = {};
-  cats.forEach(cat => {
-    const catVal = byCategory[cat];
-    const r      = Math.max(-0.99, _effectiveRate(cat, forecastRates[cat] ?? 5) / 100);
-    const mr     = r / 12;
-
-    // DCA assets belonging to this category
-    const catDca = assets.filter(a =>
-      a.category === cat && a.dca?.enabled && a.dca.amountPerTime > 0
-    );
-    // Manual monthly allocated proportionally
-    const manualForCat = total > 0 ? forecastMonthly * (catVal / total) : 0;
-    const manualMr     = blended / 12;
-
-    data[cat] = [];
-    for (let yr = 0; yr <= forecastYears; yr++) {
-      const nMonths = yr * 12;
-      let v = catVal * Math.pow(1 + r, yr);
-
-      if (yr > 0) {
-        // Per-asset DCA in this category
-        catDca.forEach(a => {
-          const monthly = a.dca.cycle === 'quarterly'
-            ? a.dca.amountPerTime / 3
-            : a.dca.amountPerTime;
-          const cap = a.dca.times > 0
-            ? (a.dca.cycle === 'quarterly' ? a.dca.times * 3 : a.dca.times)
-            : nMonths;
-          const active = Math.min(nMonths, cap);
-          v += _fvDca(monthly, mr, active, nMonths);
-        });
-
-        // Manual extra monthly for this category
-        if (manualForCat > 0) {
-          v += _fvDca(manualForCat, manualMr, nMonths, nMonths);
-        }
-      }
-
-      data[cat].push(Math.round(v));
-    }
-  });
-  return { cats, data };
-}
-
-function _renderForecastRateInputs() {
-  const cats = [...new Set(assets.map(a => a.category))];
-  const container = $('forecast-rates');
-
-  if (!cats.length) {
-    container.innerHTML = '<div style="color:var(--text2);font-size:13px">尚無資產，前往「資產明細」新增後即可設定</div>';
-    return;
-  }
-
-  container.innerHTML = cats.map(cat => {
-    const color    = CAT_COLORS[cat] ?? '#888';
-    const val      = forecastRates[cat] ?? FORECAST_DEFAULT_RATES[cat] ?? 5;
-    const realNote = (inflationEnabled && INFLATION_AFFECTED.has(cat))
-      ? `<div style="font-size:11px;color:var(--text2);padding-left:26px;margin-top:3px;">實質 ${_effectiveRate(cat, val)}%</div>`
-      : '';
-    return `
-      <div>
-        <div class="forecast-rate-row">
-          <span class="forecast-rate-dot" style="background:${color}"></span>
-          <span class="forecast-rate-name">${cat}</span>
-          <input type="number" class="forecast-rate-input" data-cat="${cat}"
-                 value="${val}" min="-20" max="50" step="0.5" />
-          <span class="forecast-rate-unit">%/年</span>
-        </div>
-        ${realNote}
-      </div>`;
-  }).join('');
-
-  container.querySelectorAll('.forecast-rate-input').forEach(inp =>
-    inp.addEventListener('input', () => {
-      forecastRates[inp.dataset.cat] = parseFloat(inp.value) || 0;
-      if (inflationEnabled && INFLATION_AFFECTED.has(inp.dataset.cat)) {
-        const note = inp.closest('div > div')?.nextElementSibling;
-        if (note) note.textContent = `實質 ${_effectiveRate(inp.dataset.cat, forecastRates[inp.dataset.cat])}%`;
-      }
-      _updateForecastLineChart();
-      _updateForecastBarChart();
-      _updateForecastSummary();
+/* ---------- 狀態 + 渲染迴圈 ---------- */
+let progress = 0, target = 0
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+let lastActive = -1
+let lastVW = 0, lastVH = 0
+
+function render() {
+  /* 視窗尺寸變更守衛:涵蓋隱藏面板→可見(初載時 innerHeight=0 會把卡片算成 0×0) */
+  if (innerWidth !== lastVW || innerHeight !== lastVH) { lastVW = innerWidth; lastVH = innerHeight; layout() }
+  const travel = section.offsetHeight - innerHeight
+  const scrolled = clamp(-section.getBoundingClientRect().top, 0, Math.max(1, travel))
+  target = travel > 0 ? (scrolled / travel) * (N - 1) : 0
+
+  const e = reduce ? 1 : CONFIG.ease
+  progress += (target - progress) * e
+  if (Math.abs(target - progress) < 0.0005) progress = target
+
+  for (let i = 0; i < N; i++) place(cards[i], i - progress)
+
+  const frac = N > 1 ? clamp(progress / (N - 1), 0, 1) : 0
+  railFill.style.height = (frac * 100) + '%'
+  railThumb.style.top = (frac * 100) + '%'
+
+  const active = clamp(Math.round(progress), 0, N - 1)
+  if (active !== lastActive) {
+    lastActive = active
+    ticks.forEach((d, i) => {
+      const on = i === active
+      d.setAttribute('aria-current', on ? 'true' : 'false')
+      d.setAttribute('aria-selected', on ? 'true' : 'false')
     })
-  );
-}
-
-function _calcPrincipal() {
-  const current   = assets.reduce((s, a) => s + a.market, 0);
-  const dcaAssets = assets.filter(a => a.dca?.enabled && a.dca.amountPerTime > 0);
-  return Array.from({ length: forecastYears + 1 }, (_, yr) => {
-    const nMonths = yr * 12;
-    let v = current;
-    dcaAssets.forEach(a => {
-      const monthly = a.dca.cycle === 'quarterly' ? a.dca.amountPerTime / 3 : a.dca.amountPerTime;
-      const cap     = a.dca.times > 0
-        ? (a.dca.cycle === 'quarterly' ? a.dca.times * 3 : a.dca.times)
-        : nMonths;
-      v += monthly * Math.min(nMonths, cap);
-    });
-    return Math.round(v);
-  });
-}
-
-function _updateForecastLineChart() {
-  const canvas = $('forecast-line-chart');
-  const empty  = $('forecast-empty');
-  if (forecastLineChartInst) { forecastLineChartInst.destroy(); forecastLineChartInst = null; }
-
-  if (!assets.length) {
-    canvas.style.display = 'none';
-    empty.style.display  = '';
-    return;
+    railCur.textContent = String(active + 1).padStart(2, '0')
+    railLabel.textContent = CONFIG.cards[active].title
+    live.textContent = `章節 ${active + 1} / ${N}:${CONFIG.cards[active].title}`
   }
-  canvas.style.display = '';
-  empty.style.display  = 'none';
+  requestAnimationFrame(render)
+}
+render()
 
-  const base      = _calcForecast(0);
-  const principal = _calcPrincipal();
-  const labels    = Array.from({ length: forecastYears + 1 }, (_, i) =>
-    i === 0 ? '現在' : `+${i}年`
-  );
-  const current = assets.reduce((s, a) => s + a.market, 0);
-
-  forecastLineChartInst = new Chart(canvas, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: '預測總資產',
-          data: base,
-          borderColor: cssVar('--gold'),
-          backgroundColor: cssVar('--gold-fill'),
-          borderWidth: 2.5,
-          pointRadius: 0,
-          pointHoverRadius: 6,
-          pointBackgroundColor: cssVar('--gold'),
-          fill: true,
-          tension: 0.35,
-          order: 1,
-        },
-        {
-          label: '投入本金',
-          data: principal,
-          borderColor: cssVar('--chart-tick'),
-          backgroundColor: cssVar('--muted-fill'),
-          borderWidth: 2,
-          borderDash: [6, 4],
-          pointRadius: 0,
-          pointHoverRadius: 5,
-          pointBackgroundColor: cssVar('--chart-tick'),
-          fill: 'origin',
-          tension: 0.1,
-          order: 2,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-          align: 'end',
-          labels: {
-            color: cssVar('--chart-tick'),
-            font: { size: 11 },
-            boxWidth: 24,
-            boxHeight: 2,
-            padding: 16,
-            usePointStyle: false,
-          }
-        },
-        tooltip: {
-          callbacks: {
-            title: items => items[0].label,
-            label: ctx => {
-              const val = ctx.parsed.y;
-              if (ctx.dataset.label === '投入本金') {
-                return `  投入本金：${fmt(val)}`;
-              }
-              const diff = val - current;
-              const pct  = current > 0 ? diff / current * 100 : 0;
-              const lines = [`  預測總資產：${fmt(val)}`];
-              if (ctx.dataIndex > 0)
-                lines.push(`  較現在：${diff >= 0 ? '+' : ''}${fmt(diff)}（${fmtPct(pct)}）`);
-              return lines;
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color: cssVar('--chart-tick'), maxTicksLimit: 16, font: { size: 11 } },
-          grid:  { color: cssVar('--chart-grid') },
-        },
-        y: {
-          ticks: {
-            color: cssVar('--chart-tick'),
-            font:  { size: 11 },
-            callback: v => {
-              if (v >= 1e8) return (v / 1e8).toFixed(1) + '億';
-              if (v >= 1e4) return (v / 1e4).toFixed(0) + '萬';
-              return '$' + v.toLocaleString('zh-TW');
-            }
-          },
-          grid: { color: cssVar('--chart-grid') },
-        }
-      }
-    }
-  });
+/* ---------- 導覽:一切都驅動原生頁面捲動 ---------- */
+const clamp01 = x => Math.min(1, Math.max(0, x))
+const sectionDocTop = () => section.getBoundingClientRect().top + scrollY
+function scrollToRaw(raw, smooth) {
+  const travel = Math.max(0, section.offsetHeight - innerHeight)
+  scrollTo({ top: sectionDocTop() + clamp01(raw) * travel, behavior: (smooth && !reduce) ? 'smooth' : 'auto' })
 }
 
-function _updateForecastBarChart() {
-  const canvas = $('forecast-bar-chart');
-  if (forecastBarChartInst) { forecastBarChartInst.destroy(); forecastBarChartInst = null; }
-
-  if (!assets.length) {
-    canvas.style.display = 'none';
-    return;
-  }
-  canvas.style.display = '';
-
-  const { cats, data } = _calcForecastByCategory();
-  const labels = Array.from({ length: forecastYears + 1 }, (_, i) =>
-    i === 0 ? '現在' : `+${i}年`
-  );
-
-  const datasets = cats.map(cat => ({
-    label: cat,
-    data: data[cat],
-    backgroundColor: CAT_COLORS[cat] ?? '#888',
-    borderWidth: 0,
-    borderRadius: 0,
-  }));
-
-  forecastBarChartInst = new Chart(canvas, {
-    type: 'bar',
-    data: { labels, datasets },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          position: 'right',
-          labels: {
-            color: cssVar('--chart-tick'),
-            font: { size: 12 },
-            boxWidth: 12,
-            boxHeight: 12,
-            padding: 12,
-          }
-        },
-        tooltip: {
-          callbacks: {
-            title: items => items[0].label,
-            label: ctx => {
-              const total = ctx.chart.data.datasets.reduce(
-                (s, ds) => s + (ds.data[ctx.dataIndex] ?? 0), 0
-              );
-              const pct = total > 0 ? (ctx.parsed.y / total * 100).toFixed(1) : '0.0';
-              return `  ${ctx.dataset.label}：${fmt(ctx.parsed.y)}（${pct}%）`;
-            },
-            footer: items => {
-              const total = items.reduce((s, it) => s + (it.parsed.y ?? 0), 0);
-              return `合計：${fmt(total)}`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          stacked: true,
-          ticks: { color: cssVar('--chart-tick'), maxTicksLimit: 16, font: { size: 11 } },
-          grid:  { display: false },
-        },
-        y: {
-          stacked: true,
-          ticks: {
-            color: cssVar('--chart-tick'),
-            font:  { size: 11 },
-            callback: v => {
-              if (v >= 1e8) return (v / 1e8).toFixed(1) + '億';
-              if (v >= 1e4) return (v / 1e4).toFixed(0) + '萬';
-              return '$' + v.toLocaleString('zh-TW');
-            }
-          },
-          grid: { color: cssVar('--chart-grid') },
-        }
-      }
-    }
-  });
+/* 進度軌:點擊或拖曳 scrub */
+let railDrag = false
+const railTo = (clientY) => {
+  const r = railTrack.getBoundingClientRect()
+  scrollToRaw((clientY - r.top) / r.height, false)
 }
+railTrack.addEventListener('pointerdown', (e) => { railDrag = true; railTrack.setPointerCapture(e.pointerId); railTo(e.clientY) })
+railTrack.addEventListener('pointermove', (e) => { if (railDrag) railTo(e.clientY) })
+const railEnd = () => { railDrag = false }
+railTrack.addEventListener('pointerup', railEnd)
+railTrack.addEventListener('pointercancel', railEnd)
 
-function _updateForecastSummary() {
-  const base     = _calcForecast(0);
-  const current  = assets.reduce((s, a) => s + a.market, 0);
-  const finalVal = base[forecastYears] ?? 0;
+/* ← → 逐章切換(僅當卡片瀑布仍在視口內,離開後不劫持捲動) */
+addEventListener('keydown', (e) => {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
+  if (section.getBoundingClientRect().bottom < innerHeight * 0.98) return
+  const cur = clamp(Math.round(progress), 0, N - 1)
+  scrollToRaw(N > 1 ? clamp(cur + (e.key === 'ArrowRight' ? 1 : -1), 0, N - 1) / (N - 1) : 0, true)
+})
 
-  // Total DCA cash outflow: respect times per asset
-  let dcaInvested = 0;
-  assets.forEach(a => {
-    if (!a.dca?.enabled || !a.dca.amountPerTime) return;
-    const monthly = a.dca.cycle === 'quarterly'
-      ? a.dca.amountPerTime / 3
-      : a.dca.amountPerTime;
-    const cap = a.dca.times > 0
-      ? (a.dca.cycle === 'quarterly' ? a.dca.times * 3 : a.dca.times)
-      : forecastYears * 12;
-    dcaInvested += monthly * Math.min(forecastYears * 12, cap);
-  });
-  const manualInvested = forecastMonthly * 12 * forecastYears;
-  const invested = current + dcaInvested + manualInvested;
-  const totalRet = finalVal - invested;   // 仍供人生單位換算使用
-
-  let cagr = null;
-  if (current > 0 && forecastYears > 0)
-    cagr = (Math.pow(finalVal / current, 1 / forecastYears) - 1) * 100;
-
-  $('fc-n-label').textContent = forecastYears;
-
-  $('fc-final').textContent = fmt(finalVal);
-  $('fc-final').className   = 'value ' + (finalVal >= current ? 'positive' : 'negative');
-
-  $('fc-invested').textContent = fmt(invested);
-  const hasDca    = dcaInvested > 0;
-  const hasManual = manualInvested > 0;
-  if (hasDca || hasManual) {
-    const parts = [];
-    if (hasDca)    parts.push(`定期定額 ${fmt(dcaInvested)}`);
-    if (hasManual) parts.push(`被動收入投入 ${fmt(manualInvested)}`);
-    $('fc-invested-sub').textContent = `現有 ${fmt(current)} + ${parts.join(' + ')}`;
-  } else {
-    $('fc-invested-sub').textContent = '現有資產（無定投）';
-  }
-
-  // 屆時每月被動收入 = 最終資產 × 提領率 ÷ 12
-  if (fireSwr > 0) {
-    const passiveFinal = finalVal * (fireSwr / 100) / 12;
-    $('fc-passive-final').textContent = fmt(passiveFinal) + ' /月';
-    $('fc-passive-final-sub').textContent = `${forecastYears} 年後資產以提領率 ${fireSwr}% 換算`;
-  } else {
-    $('fc-passive-final').textContent = '—';
-    $('fc-passive-final-sub').textContent = '請先設定安全提領率';
-  }
-
-  $('fc-cagr').textContent = cagr !== null ? fmtPct(cagr) : '—';
-  $('fc-cagr').className   = 'value ' + (cagr !== null ? (cagr >= 0 ? 'positive' : 'negative') : 'neutral');
-
-  _updateForecastLifeUnits(totalRet, forecastYears);
-  _updateFireSection();
-}
-
-// ── 財務自由試算(FIRE Crossover)──────────────────────────
-
-function _avgMonthlyExpense() {
-  if (!expenses.length) return 0;
-  const byM = {};
-  expenses.forEach(e => { const m = e.date.slice(0, 7); byM[m] = (byM[m] || 0) + e.amount; });
-  const months = Object.keys(byM).sort().slice(-3);
-  if (!months.length) return 0;
-  return Math.round(months.reduce((s, m) => s + byM[m], 0) / months.length);
-}
-
-// 交叉點標記 plugin:畫垂直金線 + ★ 標籤
-const fireCrossPlugin = {
-  id: 'fireCross',
-  afterDatasetsDraw(chart) {
-    const idx = chart.options.plugins.fireCross?.crossIdx;
-    if (idx == null || idx < 0) return;
-    const meta = chart.getDatasetMeta(0);
-    const pt = meta.data[idx];
-    if (!pt) return;
-    const { ctx, chartArea } = chart;
-    ctx.save();
-    ctx.strokeStyle = cssVar('--gold');
-    ctx.setLineDash([5, 4]);
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(pt.x, chartArea.top);
-    ctx.lineTo(pt.x, chartArea.bottom);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = cssVar('--gold');
-    ctx.font = "700 12px 'Onest','Noto Sans TC',sans-serif";
-    const onRight = pt.x > (chartArea.left + chartArea.right) / 2;
-    ctx.textAlign = onRight ? 'right' : 'left';
-    ctx.fillText('★ 財務自由點', pt.x + (onRight ? -8 : 8), chartArea.top + 14);
-    ctx.restore();
-  }
-};
-
-function _updateFireSection() {
-  const emptyEl = $('fire-empty');
-  const bodyEl  = $('fire-body');
-  if (!emptyEl || !bodyEl) return;
-  if (fireChartInst) { fireChartInst.destroy(); fireChartInst = null; }
-
-  const swr = fireSwr > 0 ? fireSwr / 100 : 0;
-  if (!assets.length || !swr || !(fireTargetExp > 0)) {
-    emptyEl.style.display = '';
-    bodyEl.style.display  = 'none';
-    return;
-  }
-  emptyEl.style.display = 'none';
-  bodyEl.style.display  = '';
-
-  const base      = _calcForecast(0);
-  const passive   = base.map(v => v * swr / 12);
-  const needAsset = fireTargetExp * 12 / swr;
-  const crossIdx  = passive.findIndex(p => p >= fireTargetExp);
-  const thisYear  = new Date().getFullYear();
-
-  $('fire-need').textContent     = fmt(needAsset);
-  $('fire-need-sub').textContent = `月開銷 ${fmt(fireTargetExp)} × 12 ÷ ${fireSwr}%`;
-
-  if (crossIdx === 0) {
-    $('fire-when').textContent     = '已達成';
-    $('fire-when-sub').textContent = '目前被動收入已可覆蓋月開銷';
-  } else if (crossIdx > 0) {
-    $('fire-when').textContent     = `+${crossIdx} 年（${thisYear + crossIdx}）`;
-    $('fire-when-sub').textContent = '依基準情境推算';
-  } else {
-    $('fire-when').textContent     = `> ${forecastYears} 年`;
-    $('fire-when-sub').textContent = '拉長預測年數、提高投入或調整目標';
-  }
-
-  const atIdx = crossIdx >= 0 ? crossIdx : forecastYears;
-  $('fire-passive-at').textContent = fmt(passive[atIdx]) + ' /月';
-  $('fire-passive-sub').textContent = crossIdx >= 0
-    ? `第 ${atIdx} 年，屆時總資產 ${fmt(base[atIdx])}`
-    : `第 ${forecastYears} 年，距目標尚差 ${fmt(fireTargetExp - passive[forecastYears])} /月`;
-
-  const labels = Array.from({ length: forecastYears + 1 }, (_, i) => i === 0 ? '現在' : `+${i}年`);
-  fireChartInst = new Chart($('fire-chart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: '每月被動收入',
-          data: passive,
-          borderColor: cssVar('--gold'),
-          backgroundColor: cssVar('--gold-fill'),
-          borderWidth: 2.5,
-          pointRadius: 0,
-          pointHoverRadius: 6,
-          pointBackgroundColor: cssVar('--gold'),
-          fill: true,
-          tension: 0.35,
-        },
-        {
-          label: '目標月開銷',
-          data: labels.map(() => fireTargetExp),
-          borderColor: cssVar('--neg'),
-          borderDash: [6, 4],
-          borderWidth: 1.5,
-          pointRadius: 0,
-          pointHoverRadius: 0,
-          fill: false,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          display: true, position: 'top', align: 'end',
-          labels: { color: cssVar('--chart-tick'), font: { size: 11 }, boxWidth: 24, boxHeight: 2, padding: 16 }
-        },
-        tooltip: {
-          callbacks: { label: ctx => `  ${ctx.dataset.label}：${fmt(ctx.parsed.y)}` }
-        },
-        fireCross: { crossIdx },
-      },
-      scales: {
-        x: {
-          ticks: { color: cssVar('--chart-tick'), maxTicksLimit: 16, font: { size: 11 } },
-          grid:  { color: cssVar('--chart-grid') },
-        },
-        y: {
-          ticks: {
-            color: cssVar('--chart-tick'),
-            font:  { size: 11 },
-            callback: v => {
-              if (v >= 1e8) return (v / 1e8).toFixed(1) + '億';
-              if (v >= 1e4) return (v / 1e4).toFixed(0) + '萬';
-              return '$' + v.toLocaleString('zh-TW');
-            }
-          },
-          grid: { color: cssVar('--chart-grid') },
-        }
-      }
-    },
-    plugins: [fireCrossPlugin]
-  });
-}
-
-function _updateForecastLifeUnits(totalRet, years) {
-  $('flu-years').textContent = years;
-  if (!Number.isFinite(totalRet) || totalRet <= 0) {
-    ['flu-coffee', 'flu-meal', 'flu-travel', 'flu-car'].forEach(id => {
-      const el = $(id); if (el) el.textContent = '—';
-    });
-    return;
-  }
-
-  const items = [
-    { id: 'flu-coffee', divisor: 50,      decimal: false },
-    { id: 'flu-meal',   divisor: 1000,    decimal: false },
-    { id: 'flu-travel', divisor: 50000,   decimal: false },
-    { id: 'flu-car',    divisor: 1000000, decimal: true  },
-  ];
-  items.forEach(({ id, divisor, decimal }) => {
-    const el = $(id);
-    if (!el) return;
-    const val = totalRet / divisor;
-    el.textContent = decimal
-      ? (Math.round(val * 100) / 100).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-      : Math.floor(val).toLocaleString('zh-TW');
-  });
-}
-
-function _updateInflationUI() {
-  const badge    = $('inflation-badge');
-  const subtitle = $('fc-chart-subtitle');
-  if (inflationEnabled) {
-    badge.classList.add('visible');
-    subtitle.textContent = '基準情境（含通膨調整 -2%）';
-  } else {
-    badge.classList.remove('visible');
-    subtitle.textContent = '基準情境 · 依各類別設定報酬率';
-  }
-}
-
-function renderForecast() {
-  _initForecastRates();
-  _renderForecastRateInputs();
-  _updateInflationUI();
-  _updateForecastLineChart();
-  _updateForecastBarChart();
-  _updateForecastSummary();
-
-  const slider = $('fc-years-slider');
-  const _syncFill = () => {
-    const pct = (slider.value - slider.min) / (slider.max - slider.min) * 100;
-    slider.style.setProperty('--fc-fill', pct + '%');
-  };
-  slider.value = forecastYears;
-  $('fc-years-val').textContent = forecastYears;
-  _syncFill();
-  slider.oninput = () => {
-    forecastYears = parseInt(slider.value);
-    $('fc-years-val').textContent = forecastYears;
-    _syncFill();
-    _updateForecastLineChart();
-    _updateForecastBarChart();
-    _updateForecastSummary();
-  };
-
-  const toggle = $('fc-inflation-toggle');
-  toggle.checked  = inflationEnabled;
-  toggle.onchange = () => {
-    inflationEnabled = toggle.checked;
-    _updateInflationUI();
-    _renderForecastRateInputs();
-    _updateForecastLineChart();
-    _updateForecastBarChart();
-    _updateForecastSummary();
-  };
-
-  // ── P4:被動收入 / 提領率 / 目標月開銷 ──
-  const pInput = $('fc-passive-input');
-  pInput.value = forecastMonthly || '';
-  pInput.oninput = () => {
-    forecastMonthly = parseFloat(pInput.value) || 0;
-    localStorage.setItem('fc_passive', forecastMonthly);
-    _updateForecastLineChart();
-    _updateForecastBarChart();
-    _updateForecastSummary();
-  };
-
-  const swrInput = $('fc-swr-input');
-  swrInput.value = fireSwr;
-  swrInput.oninput = () => {
-    fireSwr = parseFloat(swrInput.value) || 0;
-    localStorage.setItem('fc_swr', fireSwr);
-    _updateForecastSummary();   // 內含「屆時每月被動收入」卡與 FIRE 區塊刷新
-  };
-
-  const tInput = $('fc-target-exp');
-  const storedTarget = localStorage.getItem('fc_targetExp');
-  if (storedTarget === null) fireTargetExp = _avgMonthlyExpense();   // 未手動設定 → 自動帶入近月平均
-  tInput.value = fireTargetExp || '';
-  $('fc-target-hint').textContent = storedTarget !== null
-    ? '已手動設定（清空欄位可回到自動帶入）'
-    : (fireTargetExp > 0 ? '已自動帶入近期月均開銷（最近 3 個有紀錄月份），可手動調整' : '輸入你的目標月開銷即可試算');
-  tInput.oninput = () => {
-    if (tInput.value === '') {
-      localStorage.removeItem('fc_targetExp');
-      fireTargetExp = _avgMonthlyExpense();
-      $('fc-target-hint').textContent = '已回到自動帶入近月平均開銷';
-    } else {
-      fireTargetExp = parseFloat(tInput.value) || 0;
-      localStorage.setItem('fc_targetExp', fireTargetExp);
-      $('fc-target-hint').textContent = '已手動設定（清空欄位可回到自動帶入）';
-    }
-    _updateFireSection();
-  };
-
-  // 自動帶入目標後重算一次財務自由區塊(前段 summary 執行時 target 可能還是 0)
-  _updateFireSection();
-
-  const hint = $('fc-monthly-hint');
-  if (hint) {
-    const dcaTotal = _dcaMonthlyTotal();
-    if (dcaTotal > 0) {
-      hint.textContent = `各資產定期定額已自動計入（月合計 ${fmt(dcaTotal)}）`;
-      hint.style.color = 'var(--accent2)';
-      hint.style.display = '';
-    } else {
-      hint.style.display = 'none';
-    }
-  }
-}
-
-// ── Clear All ─────────────────────────────────────────────
-
-document.getElementById('btn-clear-all').addEventListener('click', () => {
-  if (!confirm('確定要清空所有資料嗎？\n（資產、收入、開銷紀錄將全部清除）')) return;
-  assets        = [];
-  incomeSources = [];
-  expenses      = [];
-  snapshots     = [];
-  targets       = {};
-  save(KEYS.assets, assets);
-  save(KEYS.snapshots, snapshots);
-  save(KEYS.targets, targets);
-  localStorage.setItem(INCOME_KEY, JSON.stringify(incomeSources));
-  save(EXP_KEY, expenses);
-  renderDashboard();
-  renderAssets();
-  renderExpenses();
-  renderForecast();
-  updateHeader();
-});
-
-// ── Load Demo Data ────────────────────────────────────────
-
-const _btnLoadDemo = document.getElementById('btn-load-demo');
-if (_btnLoadDemo) {
-  _btnLoadDemo.addEventListener('click', () => {
-    localStorage.removeItem('assets');
-    localStorage.removeItem('monthlyIncome');
-    localStorage.removeItem('expenses');
-    window.location.reload();   // 重新載入後 seedDefaults 會灌入示範資料
-  });
-}
-
-// ── 主題切換 ──────────────────────────────────────────────
-
-$('btn-theme').addEventListener('click', () => {
-  const toLight = !isLightTheme();
-  if (toLight) document.documentElement.dataset.theme = 'light';
-  else delete document.documentElement.dataset.theme;
-  localStorage.setItem('theme', toLight ? 'light' : 'dark');
-  _applyThemePalettes();
-  _applyChartDefaults();
-  // 圖表顏色是建圖時讀取的,切換後重繪當前分頁
-  const active = document.querySelector('.page.active')?.id;
-  if (active === 'page-dashboard') { renderDashboard(); renderFilterBar(); renderAssets(); }
-  if (active === 'page-expenses')  renderExpenses();
-  if (active === 'page-forecast')  renderForecast();
-});
-
-// ── Init ──────────────────────────────────────────────────
-
-renderDashboard();
-renderFilterBar();
-renderAssets();
-updateHeader();
-renderExpenses();
+/* ---------- 出發區捲動進場 ---------- */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target) } })
+}, { threshold: 0.16 })
+document.querySelectorAll('.reveal').forEach(el => io.observe(el))
 </script>
 </body>
 </html>
