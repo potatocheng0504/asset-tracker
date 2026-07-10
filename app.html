@@ -1201,7 +1201,7 @@
 
     /* ── 財務自由試算(P4)──────────────────────────────── */
     .forecast-passive-row {
-      display: grid; grid-template-columns: repeat(3, 1fr);
+      display: grid; grid-template-columns: minmax(0, 380px);
       gap: 16px;
       padding: 18px 0 20px;
       margin-bottom: 4px;
@@ -1659,19 +1659,9 @@
 
       <div class="forecast-passive-row">
         <div class="field">
-          <label>每月被動收入（自動再投入）</label>
-          <input type="number" id="fc-passive-input" placeholder="例：5000，沒有可留空" min="0" step="500" />
-          <span class="field-hint">你目前每月的額外現金流（股息／租金／版稅／副業）。輸入後會當成每月加碼投入，用整體組合報酬率滾複利；留空＝不計入</span>
-        </div>
-        <div class="field">
-          <label>安全提領率（%/年）</label>
-          <input type="number" id="fc-swr-input" placeholder="4" min="0.5" max="12" step="0.5" />
-          <span class="field-hint">退休後每年可從資產「安全提領」的比例（經典 4% 法則）。資產 × 提領率 ÷ 12 ＝ 月被動收入；設得越低越保守、所需資產越多</span>
-        </div>
-        <div class="field">
           <label>財務自由目標：月開銷</label>
           <input type="number" id="fc-target-exp" placeholder="0" min="0" step="1000" />
-          <span class="field-hint" id="fc-target-hint">預設帶入近月平均開銷，可手動調整</span>
+          <span class="field-hint" id="fc-target-hint">自動帶入你在「收支」記錄的本月開銷，可手動調整</span>
         </div>
       </div>
 
@@ -2767,7 +2757,8 @@ function _saveIncomeSources() {
 
 // ── Expense State ─────────────────────────────────────────
 
-const todayStr       = new Date().toISOString().slice(0, 10);
+const _todayD        = new Date();   // 本地時間(與 seed 的 today.getMonth() 對齊,避免 UTC 於月初凌晨差一月)
+const todayStr       = _todayD.getFullYear() + '-' + String(_todayD.getMonth() + 1).padStart(2, '0') + '-' + String(_todayD.getDate()).padStart(2, '0');
 const currentYM      = todayStr.slice(0, 7);
 let   viewMonth      = currentYM;   // "YYYY-MM"
 let   expFilterCat   = 'all';
@@ -3122,13 +3113,13 @@ const FORECAST_DEFAULT_RATES = {
 };
 
 let forecastYears        = 10;
-let forecastMonthly      = parseFloat(localStorage.getItem('fc_passive')) || 0;   // 每月被動收入(投入複利)
+let forecastMonthly      = 0;   // 已移除「每月被動收入」輸入,固定不加碼投入(各資產 DCA 仍計入)
 let forecastRates        = {};
 let forecastLineChartInst = null;
 let forecastBarChartInst  = null;
 let fireChartInst        = null;
 let inflationEnabled     = false;
-let fireSwr              = parseFloat(localStorage.getItem('fc_swr')) || 4;       // 安全提領率 %
+let fireSwr              = 4;       // 安全提領率固定 4%(經典法則,已移除輸入)
 let fireTargetExp        = parseFloat(localStorage.getItem('fc_targetExp')) || 0; // 財務自由目標月開銷
 
 const INFLATION_AFFECTED = new Set(['儲蓄帳戶', '現金', '外幣', '保險', '定存']);
@@ -3602,13 +3593,11 @@ function _updateForecastSummary() {
 
 // ── 財務自由試算(FIRE Crossover)──────────────────────────
 
-function _avgMonthlyExpense() {
-  if (!expenses.length) return 0;
-  const byM = {};
-  expenses.forEach(e => { const m = e.date.slice(0, 7); byM[m] = (byM[m] || 0) + e.amount; });
-  const months = Object.keys(byM).sort().slice(-3);
-  if (!months.length) return 0;
-  return Math.round(months.reduce((s, m) => s + byM[m], 0) / months.length);
+// 本月開銷 = 當前月份(currentYM)的收支總額,與「收支」頁標題「本月開銷」同源
+function _currentMonthExpense() {
+  return expenses
+    .filter(e => e.date.startsWith(currentYM))
+    .reduce((s, e) => s + e.amount, 0);
 }
 
 // 交叉點標記 plugin:畫垂直金線 + ★ 標籤
@@ -3820,41 +3809,23 @@ function renderForecast() {
     _updateForecastSummary();
   };
 
-  // ── P4:被動收入 / 提領率 / 目標月開銷 ──
-  const pInput = $('fc-passive-input');
-  pInput.value = forecastMonthly || '';
-  pInput.oninput = () => {
-    forecastMonthly = parseFloat(pInput.value) || 0;
-    localStorage.setItem('fc_passive', forecastMonthly);
-    _updateForecastLineChart();
-    _updateForecastBarChart();
-    _updateForecastSummary();
-  };
-
-  const swrInput = $('fc-swr-input');
-  swrInput.value = fireSwr;
-  swrInput.oninput = () => {
-    fireSwr = parseFloat(swrInput.value) || 0;
-    localStorage.setItem('fc_swr', fireSwr);
-    _updateForecastSummary();   // 內含「屆時每月被動收入」卡與 FIRE 區塊刷新
-  };
-
+  // ── P4:財務自由目標月開銷(自動帶入「收支」本月開銷,可手動覆寫)──
   const tInput = $('fc-target-exp');
   const storedTarget = localStorage.getItem('fc_targetExp');
-  if (storedTarget === null) fireTargetExp = _avgMonthlyExpense();   // 未手動設定 → 自動帶入近月平均
+  if (storedTarget === null) fireTargetExp = _currentMonthExpense();   // 未手動設定 → 自動帶入本月開銷
   tInput.value = fireTargetExp || '';
   $('fc-target-hint').textContent = storedTarget !== null
-    ? '已手動設定（清空欄位可回到自動帶入）'
-    : (fireTargetExp > 0 ? '已自動帶入近期月均開銷（最近 3 個有紀錄月份），可手動調整' : '輸入你的目標月開銷即可試算');
+    ? '已手動設定（清空欄位可回到自動帶入本月開銷）'
+    : (fireTargetExp > 0 ? '已帶入你在「收支」記錄的本月開銷，可手動調整' : '本月尚無開銷紀錄，請先到「收支」記帳或手動輸入目標');
   tInput.oninput = () => {
     if (tInput.value === '') {
       localStorage.removeItem('fc_targetExp');
-      fireTargetExp = _avgMonthlyExpense();
-      $('fc-target-hint').textContent = '已回到自動帶入近月平均開銷';
+      fireTargetExp = _currentMonthExpense();
+      $('fc-target-hint').textContent = '已回到自動帶入本月開銷';
     } else {
       fireTargetExp = parseFloat(tInput.value) || 0;
       localStorage.setItem('fc_targetExp', fireTargetExp);
-      $('fc-target-hint').textContent = '已手動設定（清空欄位可回到自動帶入）';
+      $('fc-target-hint').textContent = '已手動設定（清空欄位可回到自動帶入本月開銷）';
     }
     _updateFireSection();
   };
