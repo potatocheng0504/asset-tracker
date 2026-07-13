@@ -636,7 +636,13 @@ void main(void) {
   }
   const fxReduce = matchMedia('(prefers-reduced-motion: reduce)').matches
   let sanity = false
+  let lastDraw = 0
+  const FRAME_MIN = 1000 / 30 /* FPS 上限 30,省一半以上運算量 */
   function fxFrame(now) {
+    /* 分頁隱藏時暫停整條迴圈,不畫也不排下一幀的計時基準 */
+    if (document.hidden) { requestAnimationFrame(fxFrame); return }
+    if (now - lastDraw < FRAME_MIN) { requestAnimationFrame(fxFrame); return }
+    lastDraw = now
     const changed = fit()
     /* reduced-motion:凍結 time,只在尺寸變更時重畫靜態幀 */
     if (cv.width > 0 && (!fxReduce || changed)) {
